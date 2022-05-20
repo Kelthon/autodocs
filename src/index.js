@@ -64,15 +64,22 @@ app.post('/new/doc/:id/', (req, res) => {
     const { //form fields
             projectTitle, 
             professorName, 
+            professorTitle, 
             studentName, 
             studentPeriod, 
             studentRegistration, 
-            coordinatorName, 
-            coordinatorSignature, 
-            coordinatorSiape, 
+            secondMemberName,
+            secondMemberTitle,
+            ThirdMember,
+            ThirdMemberName,
+            ThirdMemberTitle,
             presentationRoom, 
             presentationDate, 
-            presentationHour 
+            presentationHour,
+            coordinatorName, 
+            coordinatorSignature, 
+            coordinatorSiape,
+            jobTitle
         } = req.body;
 
     // Definição do modelo do documento usando o pdfkit
@@ -96,9 +103,10 @@ app.post('/new/doc/:id/', (req, res) => {
         .moveDown().moveDown().moveDown()
         .text(`Juazeiro do Norte, ${date()}`, { align: "right" })
         .moveDown().moveDown()
-        .text(`${coordinatorSignature}`, { align: "center", })
+        .lineGap(0).text(`${coordinatorSignature}`, { align: "center", })
         .text(`${coordinatorName}`, { align: "center", })
-        .text(`Siape: ${coordinatorSiape}`, { align: "center", })
+        .text(`${jobTitle} do Curso de Engenharia Civil`, { align: "center", })
+        .text(`SIAPE: ${coordinatorSiape}`, { align: "center", })
     doc.end();
 
     doc.pipe(fs.createWriteStream(docPath));
@@ -111,7 +119,7 @@ app.post('/new/doc/:id/', (req, res) => {
     avform.fontSize(12)
         .font("Times-Bold").text("FORMULÁRIO DE AVALIAÇÃO", { align: "center", })
         .fontSize(10).font("Times-Bold").text("PROJETO DE GRADUAÇÃO I", { align: "center", })
-        .lineGap(9).moveDown().moveDown()
+        .moveDown().moveDown()
         .fontSize(12).font("Times-Bold").text(`Título: "${projectTitle}"`, { align: "justify"})
         .moveDown()
         .font("Times-Bold").text("Orientando (a): ", {continued: true})
@@ -123,16 +131,24 @@ app.post('/new/doc/:id/', (req, res) => {
         .font("Times-Bold").text("Local: ", {continued: true})
         .font("Times-Roman").text("Juazeiro do Norte ", {continued: true})
         .font("Times-Roman").text(`(${presentationRoom})`)
-        .font("Times-Bold").text("Data: ", {continued: true})
-        .font("Times-Roman").text(`(${presentationDate})`)
+        .font("Times-Bold").text("Data: ", { continued: true })
+        .font("Times-Roman").text(`(${presentationDate}) `, { continued: true })
         .font("Times-Bold").text("Hora: ", {continued: true})
         .font("Times-Roman").text(`(${presentationHour})`)
         .moveDown()
         .font("Times-Bold").text("Tabela de avaliação (0 a 1 ponto para cada item, com apenas um algarismo significatico)", {continued: true})
-        .lineGap(3).font("Times-Bold").text("Observações:__________________________________________________________________________________________________________________________________________________________________________________________________________________________________")
-        .lineGap(9).font("Times-Bold").text("Resultado final", { align: "justify" })
-        .text("(nota):_________________________________________")
+        
+        .font("Times-Bold").text("Observações: _____________________________________________________________________________________________________________________________________________________________________________________________________________________", { align: "justify" })
+        .font("Times-Bold").text("Resultado final", { align: "justify", continued: true })
+        .text("(nota):________________________________________________________")
+        .moveDown()
         .text("Assinaturas:")
+        .text("_________________________________________", { align: "center" })
+        .lineGap(9).font("Times-Bold").text(`${professorTitle} ${professorName} `,  { align: "justify", continued: true })
+        .font("Times-Roman").text("(Orientador(a) e Pres. da Banca)")
+        .lineGap(3).text("_________________________________________", { align: "center" })
+        .lineGap(9).font("Times-Bold").text(`${secondMemberTitle} ${secondMemberName} `,  { align: "justify", continued: true })
+        .font("Times-Roman").text("(2° membro examinador)")
         
     avform.end();
 
