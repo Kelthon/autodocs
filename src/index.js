@@ -4,7 +4,6 @@ const moment = require("moment")
 const pdf = require("pdfkit");
 const path = require("path");
 const fs = require("fs");
-const { header } = require("express/lib/request");
 const app = express();
 const port = 8080;
 
@@ -34,7 +33,7 @@ function date(format = "LL") {
             nextDay: '[Amanhã às] LT',
             nextWeek: 'dddd [às] LT',
             lastDay: '[Ontem às] LT',
-            lastWeek: '[Last] dddd [às] LT',
+            lastWeek: '[em] dddd [às] LT',
             sameElse: 'L',
         },
         relativeTime : {
@@ -91,6 +90,9 @@ app.post('/new/doc/:id/', (req, res) => {
     });
 
     doc.fontSize(12).lineGap(9)
+        .image(path.resolve(__dirname, "..", "public", "img", "Brasão Vertical Preto.png"), {
+            align: "center",
+        })    
         .font("Times-Bold").text("DECLARAÇÃO", { align: "center", })
         .moveDown(2)
         .font("Times-Roman").text("Declaro para os devidos fins que ", { align: "justify", continued: true })
@@ -118,6 +120,9 @@ app.post('/new/doc/:id/', (req, res) => {
     
 
     avform.fontSize(12)
+        .image(path.resolve(__dirname, "..", "public", "img", "UFCA+CCT CH (2).png"), {
+            width: 300
+        })
         .font("Times-Bold").text("FORMULÁRIO DE AVALIAÇÃO", { align: "center", underline:true})
         .fontSize(10).font("Times-Bold").text("PROJETO DE GRADUAÇÃO I", { align: "center", underline:true})
         .moveDown(2)
@@ -138,101 +143,10 @@ app.post('/new/doc/:id/', (req, res) => {
         .font("Times-Roman").text(`(${presentationHour})`)
         .moveDown()
         .font("Times-Bold").text("Tabela de avaliação (0 a 1 ponto para cada item, com apenas um algarismo significatico)", {continued: true})
-
-        // Table
-        .moveTo(65, 240)
-        .lineTo(65, 270)
-        .lineTo(530, 270)
-        .lineTo(530, 240)
-        .lineTo(65, 240)
-
-        .moveTo(65, 270)
-        .lineTo(65, 290)
-        .lineTo(530, 290)
-        .lineTo(530, 270)
-        
-        .moveTo(65, 290)
-        .lineTo(65, 305)
-        .lineTo(530, 305)
-        .lineTo(530, 290)
-        
-        .moveTo(65, 305)
-        .lineTo(65, 320)
-        .lineTo(530, 320)
-        .lineTo(530, 305)
-
-        .moveTo(65, 320)
-        .lineTo(65, 335)
-        .lineTo(530, 335)
-        .lineTo(530, 320)
-        
-        .moveTo(65, 335)
-        .lineTo(65, 350)
-        .lineTo(530, 350)
-        .lineTo(530, 335)
-
-        .moveTo(65, 350)
-        .lineTo(65, 365)
-        .lineTo(530, 365)
-        .lineTo(530, 350)
-
-        .moveTo(65, 365)
-        .lineTo(65, 390)
-        .lineTo(530, 390)
-        .lineTo(530, 365)
-
-        .moveTo(65, 390)
-        .lineTo(65, 410)
-        .lineTo(530, 410)
-        .lineTo(530, 390)
-
-        .moveTo(65, 410)
-        .lineTo(65, 425)
-        .lineTo(530, 425)
-        .lineTo(530, 410)
-
-        .moveTo(65, 425)
-        .lineTo(65, 440)
-        .lineTo(530, 440)
-        .lineTo(530, 425)
-
-        .moveTo(65, 440)
-        .lineTo(65, 455)
-        .lineTo(530, 455)
-        .lineTo(530, 440)
-
-        .moveTo(65, 440)
-        .lineTo(65, 455)
-        .lineTo(530, 455)
-        .lineTo(530, 440)
-
-        .moveTo(65, 455)
-        .lineTo(65, 471)
-        .lineTo(530, 471)
-        .lineTo(530, 455)
-        // "desccrição do objeto da pesquisa e elaboração da justificativa"
-        
-        .moveTo(357, 255)
-        .lineTo(475, 255)
-
-        .moveTo(357, 240)
-        .lineTo(357, 471)
-
-        .moveTo(397, 255)
-        .lineTo(397, 471)
-        
-        .moveTo(436, 255)
-        .lineTo(436, 471)
-        
-        .moveTo(475, 240)
-        .lineTo(475, 471)
-
-        .lineWidth(1)
-        .fillOpacity(1)
-        .stroke()
-
-        .moveDown(16.9)
-        
+        .moveDown()
+        .image(path.resolve(__dirname, "..", "public", "img", "table_av.png"), {
+            width: 450
+        })
         .font("Times-Bold").text("Observações: _____________________________________________________________________________________________________________________________________________________________________________________________________________________", { align: "justify" })
         .font("Times-Bold").text("Resultado final", { align: "justify", continued: true })
         .text("(nota):________________________________________________________")
