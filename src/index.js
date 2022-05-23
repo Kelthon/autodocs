@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
     res.send("Auto Docs");
 })
 
-app.post('/new/doc/:id/', (req, res) => {
+app.post('/new/doc/:id', (req, res) => {
     const { //form fields
             projectTitle, 
             professorName, 
@@ -69,9 +69,9 @@ app.post('/new/doc/:id/', (req, res) => {
             studentRegistration, 
             secondMemberName,
             secondMemberTitle,
-            ThirdMember,
-            ThirdMemberName,
-            ThirdMemberTitle,
+            thirdMember,
+            thirdMemberName,
+            thirdMemberTitle,
             presentationRoom, 
             presentationDate, 
             presentationHour,
@@ -79,7 +79,7 @@ app.post('/new/doc/:id/', (req, res) => {
             coordinatorSignature, 
             coordinatorSiape,
             jobTitle
-        } = req.body;
+    } = req.body;
 
     // Definição do modelo do documento usando o pdfkit
     const docPath = path.resolve(__dirname, "..", "public", "files", `declaracao-1-${studentRegistration}.pdf`);
@@ -90,9 +90,11 @@ app.post('/new/doc/:id/', (req, res) => {
     });
 
     doc.fontSize(12).lineGap(9)
-        .image(path.resolve(__dirname, "..", "public", "img", "Brasão Vertical Preto.png"), {
+        .image(path.resolve(__dirname, "..", "public", "img", "Brasão Vertical Preto.png"), 223, 72, {
+            width: 150,
             align: "center",
-        })    
+        })
+        .moveDown()
         .font("Times-Bold").text("DECLARAÇÃO", { align: "center", })
         .moveDown(2)
         .font("Times-Roman").text("Declaro para os devidos fins que ", { align: "justify", continued: true })
@@ -118,15 +120,18 @@ app.post('/new/doc/:id/', (req, res) => {
         font: "Times-Roman",
     });
     
-
+    const firstSignature =  (professorTitle + professorName + "(Orientador(a) e Pres. da Banca)").length;
+    const secondSignature =  (secondMemberTitle + secondMemberName + "(2° membro examinador)").length;
+    const thirdSignature =  ( thirdMemberTitle + thirdMemberName + "(3° membro examinador)").length;
     avform.fontSize(12)
-        .image(path.resolve(__dirname, "..", "public", "img", "UFCA+CCT CH (2).png"), {
-            width: 300
+        .image(path.resolve(__dirname, "..", "public", "img", "UFCA+CCT CH (2).png"), 42, 58, {
+            width: 288
         })
+        .moveDown(4)
         .font("Times-Bold").text("FORMULÁRIO DE AVALIAÇÃO", { align: "center", underline:true})
         .fontSize(10).font("Times-Bold").text("PROJETO DE GRADUAÇÃO I", { align: "center", underline:true})
         .moveDown(2)
-        .fontSize(12).font("Times-Bold").text(`Título: "${projectTitle}"`, { align: "justify"})
+        .fontSize(12).font("Times-Bold").text(`Título: "${projectTitle.toUpperCase()}"`, { align: "justify"})
         .moveDown()
         .font("Times-Bold").text("Orientando (a): ", {continued: true})
         .font("Times-Roman").text(`${studentName}`)
@@ -148,16 +153,19 @@ app.post('/new/doc/:id/', (req, res) => {
             width: 450
         })
         .font("Times-Bold").text("Observações: _____________________________________________________________________________________________________________________________________________________________________________________________________________________", { align: "justify" })
-        .font("Times-Bold").text("Resultado final", { align: "justify", continued: true })
-        .text("(nota):________________________________________________________")
+        .font("Times-Bold").text("Resultado final(nota):________________________________________________________", { align: "justify", continued: true })
         .moveDown()
         .text("Assinaturas:")
-        .text("_________________________________________", { align: "center" })
-        .lineGap(9).font("Times-Bold").text(`${professorTitle} ${professorName} `,  { align: "justify", continued: true })
-        .font("Times-Roman").text("(Orientador(a) e Pres. da Banca)")
-        .lineGap(3).text("_________________________________________", { align: "center" })
-        .lineGap(9).font("Times-Bold").text(`${secondMemberTitle} ${secondMemberName} `,  { align: "justify", continued: true })
-        .font("Times-Roman").text("(2° membro examinador)")
+        .text("_________________________________________")
+        .lineGap(9).font("Times-Bold").text(`${professorTitle} ${professorName} `, { align: "justify", continued: true })
+        .font("Times-Roman").text("(Orientador(a) e Pres. da Banca)", {continued: false})
+        .lineGap(3).text("_________________________________________")
+        .lineGap(9).font("Times-Bold").text(`${secondMemberTitle} ${secondMemberName} `, { align: "justify", continued: true })
+        .font("Times-Roman").text("(2° membro examinador)",)
+        .image(path.resolve(__dirname, "..", "public", "img", "ondas.png"), 0, 800, {
+            width: 1000,
+            align: "center"
+        })
     avform.end();
 
     avform.pipe(fs.createWriteStream(avformPath));
