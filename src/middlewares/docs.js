@@ -169,11 +169,11 @@ function declarationOrientador (
         .moveDown(2)
         
         .font("Times-Roman").text("Declaro para os devidos fins que ", { align: "justify", continued: true })
-        .font("Times-Bold").text(`${professorName}`, { continued: true })
+        .font("Times-Bold").text(`${professorName} `, { continued: true })
         .font("Times-Roman").text("participou na condição de membro presidente da Banca Examinadora do Trabalho de Conclusão de Curso I, de Graduação em Engenharia Civil, do(a) discente ", { continued: true })
-        .font("Times-Italic").text(`${studentName}`, { continued: true })
+        .font("Times-Italic").text(`${studentName} `, { continued: true })
         .font("Times-Roman").text(", com título ", { continued: true })
-        .font("Times-Bold").text(`${projectTitle}`, { continued: true })
+        .font("Times-Bold").text(`${projectTitle} `, { continued: true })
         
         .font("Times-Roman").text(`, referente ao período ${studentPeriod}`)
         
@@ -224,11 +224,11 @@ function declarationMember (
         .moveDown(2)
         
         .font("Times-Roman").text("Declaro para os devidos fins que ", { align: "justify", continued: true })
-        .font("Times-Bold").text(`${professorName}`, { continued: true })
+        .font("Times-Bold").text(`${professorName} `, { continued: true })
         .font("Times-Roman").text(", participou na condição de membro examinador da Banca Examinadora do Trabalho de Conclusão de Curso I, de Graduação em Engenharia Civil, do(a) discente ", { continued: true }) 
-        .font("Times-Italic").text(`${studentName}`, { continued: true })
+        .font("Times-Italic").text(`${studentName} `, { continued: true })
         .font("Times-Roman").text(", com título ", { continued: true })
-        .font("Times-Bold").text(`${projectTitle}`, { continued: true })
+        .font("Times-Bold").text(`${projectTitle} `, { continued: true })
         .font("Times-Roman").text(`, referente ao período ${studentPeriod}`)
         
         .moveDown(3)
