@@ -42,8 +42,12 @@ app.post('/new/doc/:id', (req, res) => {
         coordinatorSiape,
         jobTitle,
     } = req.body;
+    
+    const errors = [];
+    const docs = [];
+
     try {
-        const avaliacao = formAvaliacao( 
+        const avaliacao = formAvaliacao( avaliacao,
             `/Avaliação ${studentRegistration} TCC I.pdf`,
             projectTitle, 
             professorName, 
@@ -58,8 +62,9 @@ app.post('/new/doc/:id', (req, res) => {
             presentationDate, 
             presentationHour,
         );
+        docs.append(avaliacao);
     } catch {
-
+        errors.append("Falha ao criar formulário de avaliação");
     }
 
     try {
@@ -74,10 +79,12 @@ app.post('/new/doc/:id', (req, res) => {
             coordinatorSiape,
             jobTitle,
             true
-        );  
+        );
+        docs.append(declaracaoDoOrientador);
     } catch {
-
+        errors.append("Falha ao criar declaração do Orientador");
     }
+
     try {
         const declaracaoDoSegundoMembro = declarationMember(
             `/Declaração do Segundo Membro da Banca TCC I ${studentRegistration}.pdf`,
@@ -91,27 +98,45 @@ app.post('/new/doc/:id', (req, res) => {
             jobTitle,
             false
         );
+        docs.append(declaracaoDoSegundoMembro);
     } catch {
-        
+        errors.append("Falha ao criar declaração do segundo membro");
     }
-    try {
-        const declaracaoDoTerceiroMembro = declarationMember(
-            `/Declaração do Terceiro Membro da Banca TCC I ${studentRegistration}.pdf`,
-            projectTitle, 
-            professorName, 
-            studentName,
-            studentPeriod, 
-            coordinatorName, 
-            coordinatorSignature, 
-            coordinatorSiape,
-            jobTitle,
-            false
-        )
-    } catch {
 
+    if(thirdMember) {
+        try {
+            const declaracaoDoTerceiroMembro = declarationMember(
+                `/Declaração do Terceiro Membro da Banca TCC I ${studentRegistration}.pdf`,
+                projectTitle, 
+                professorName, 
+                studentName,
+                studentPeriod, 
+                coordinatorName, 
+                coordinatorSignature, 
+                coordinatorSiape,
+                jobTitle,
+                false
+            );
+            docs.append(declaracaoDoTerceiroMembro);
+        } catch {
+            errors.append("Falha ao criar declaração do terceiro membro");
+        }
     }
+
         
-    res.status(200).send("Docs generateds")
+    if(errors.length > 0) {
+        docs.forEach(element => {
+            fs.unlinkSync(element);
+        });
+
+        res.status(500).json({
+            errors: errors
+        })
+    }
+
+    res.status(200).json({
+        paths: docs
+    })
 })
 
 app.listen(port, () => {
