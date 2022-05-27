@@ -80,7 +80,7 @@ function formAvaliacao (
         .lineGap(3).text("_________________________________________", { align: "center" })
         .lineGap(9).text(`${secondMemberTitle} ${secondMemberName} (2° membro examinador)`, { align: "center" })
         
-        if(thirdMember) {
+        if(thirdMember == true) {
             doc.lineGap(3).text("_________________________________________", { align: "center" })
             doc.text(`${thirdMemberTitle} ${thirdMemberName} (3° membro examinador)`, { align: "center" })
         }

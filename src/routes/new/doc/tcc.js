@@ -97,7 +97,7 @@ router.post('/new/doc/:id', (req, res) => {
         errors.push("Falha ao criar declaração do segundo membro");
     }
 
-    if(thirdMember) {
+    if(thirdMember == true) {
         try {
             const declaracaoDoTerceiroMembro = declarationMember(
                 `/Declaração do Terceiro Membro da Banca TCC I ${studentRegistration}.pdf`,
