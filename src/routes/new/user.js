@@ -3,6 +3,7 @@ const user = require("../../models/user");
 
 router.post("/new/user", (req, res) => {
     const { username, usersiape, usermail, usertitle } = req.body;
+    console.log(username);
     const stat = 200;
     const msg = "";
 
@@ -13,12 +14,12 @@ router.post("/new/user", (req, res) => {
         title: usertitle,
     });
 
-
     try {
         newuser.save();
-        stat = 500;
+        stat = 200;
         msg = "Usuário criado com sucesso!"
     } catch {
+        stat = 500;
         console.log("Error ao salvar novo usuário");
         msg = "Error ao salvar novo usuário";
     }

@@ -2,7 +2,6 @@ const express = require("express");
 const fs = require("fs");
 
 const { 
-    date,
     filesFolder,
     publicFolder,
     formAvaliacao, 

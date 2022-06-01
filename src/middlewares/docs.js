@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const pdf = require("pdfkit");
-const date = require("./date");
+const date = require("../utils/date");
 
 // Caminhos para as pastas public e files
 const publicFolder = path.join(__dirname, "../..", "public");

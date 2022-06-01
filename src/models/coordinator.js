@@ -8,17 +8,22 @@ const Coordinator = sequelize.define("coordinator", {
         autoIncrement: true
     },
 
-    siape: {
-        type: DataTypes.STRING,
+    coordinator: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
 
-    fullName: {
-        type: DataTypes.TEXT,
-        allowNull: false,
+    viceCoordinator: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
 
-    signaturePath: {
+    coordinatorSignaturePath: {
+        type: DataTypes.TEXT,
+        allowNull: false, 
+    },
+
+    viceCoordinatorSignaturePath: {
         type: DataTypes.TEXT,
         allowNull: false, 
     },

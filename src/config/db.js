@@ -1,9 +1,9 @@
 module.exports = {
-    dialect: "postegres",
-    host: "localhost", 
-    username: "dbtest",
-    password: "dbtest",
-    database: "autodocsdb",
+    dialect: "postgres",
+    host: "kesavan.db.elephantsql.com", 
+    username: "mkmbjxkp",
+    password: "I8Iknx_IUoZPOarjxhgkIboe-CPHz16J",
+    database: "mkmbjxkp",
     define: {
         timestamps: true,
         underscored: true, 
