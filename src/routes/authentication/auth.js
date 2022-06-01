@@ -4,11 +4,16 @@ const user = require("../models/user");
 router.use();
 
 router.post("/login", (req, res) => {
+    let msg;
+    let stat;
     const siape = req.body.siape;
-    const msg = [];
-    if( user.findOne({siape: siape}) == null) errors.push("Usuário não encontrado!");
+    
+    if(user.findOne({siape: siape}) == null) {
+        stat = 404
+        msg = "User not found!";
+    }
 
-    res.status(200).json({
+    res.status(stat).json({
         message: msg
     });
 });
