@@ -15,7 +15,8 @@ const User = sequelize.define("user", {
     
     email: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     
     title: {
@@ -25,7 +26,8 @@ const User = sequelize.define("user", {
 
     siape: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }, 
 
     isAdmin: {
