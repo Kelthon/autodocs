@@ -10,11 +10,11 @@ function isEmail(email) {
 
 function isPhone(phone) {
     return  /^((\d{3}|\d{2}|\d{1})(\d{4}|\d{3}|\d{2}|\d{1})(\d{2}|\d{1})\d{6})$/.test(phone) ? true :
-            /^([+]?\d{2}|)[\s]?(\d{2}|\(\d{2}\))[\s]?(\d|)[\s]?\d{4}[-]?\d{4}$/.test(phone);
+            /^([+]?\d{2}|)[\s]?(\d{2}|\(\d{2}\))[\s]?\d?[\s]?\d{4}[-]?\d{4}$/.test(phone);
 }
 
 function isName(name) {
-    return name.length >= 3? /^[a-zA-zà-úÀ-Ú]*$/.test(name) : false;
+    return name.length >= 3? /^[a-zA-zà-úÀ-Ú\s]*$/.test(name) : false;
 }
 
 function isAbbrev(abbrev) {
@@ -26,49 +26,63 @@ function validateFields({
     nameslist ,
     phoneslist,
     abbrevslist,
+    siapeslist
 }) {
-    errors = [];
-   
+    let errors = [];
+    let isValid;
+
     if(emailslist !== undefined) {
-        if(emailslist.isArray() === true) {
+        if(Array.isArray(emailslist) === true) {
         emailslist.forEach(mail => {
                 if(isEmail(mail) === false)
-                errors.push(mail + "Invalid email adress adress");
+                errors.push(`Invalid email adress: ${mail}`);
             });
         }
-        else isEmail(emailslist) === false ? errors.push(mail + "Invalid email adress") : errors = errors;
+        else isEmail(emailslist) === false ? errors.push(`Invalid email adress: ${emailslist}`) : errors = errors;
     }
 
     if(nameslist !== undefined) {
-        if(nameslist.isArray() === true) {
+        if(Array.isArray(nameslist) === true) {
             nameslist.forEach(name => {
                 if(isName(name) === false)
-                    errors.push(`Invalid name`);
+                    errors.push(`Invalid name: ${name}`);
             });
         }
-        else isName(nameslist) === false ? errors.push(`Invalid name`) : errors = errors;
+        else isName(nameslist) === false ? errors.push(`Invalid name: ${nameslist}`) : errors = errors;
     }
 
     if(phoneslist !== undefined) {
-        if(phoneslist.isArray() === true) {
+        if(Array.isArray(phoneslist) === true) {
             phoneslist.forEach(phone => {
                 if(isPhone(phone) === false)
-                    errors.push(`Invalid phone number`);
+                    errors.push(`Invalid phone number: ${phone}`);
             });
         }
-        else isName(phoneslist) === false ? errors.push(`Invalid phone number`) : errors = errors; 
+        else isName(phoneslist) === false ? errors.push(`Invalid phone number: ${phoneslist}`) : errors = errors; 
     }
 
     if(abbrevslist !== undefined) {
-        if(abbrevslist.isArray() === true) {
+        if(Array.isArray(abbrevslist) === true) {
             abbrevslist.forEach(abbrev => {
                 if(isAbbrev(abbrev) === false)
-                    errors.push(`Invalid abbreviation`);
+                    errors.push(`Invalid abbreviation: ${abbrev}`);
             });
         }
+        else isAbbrev(abbrevslist) === false? errors.push(`Invalid abbreviation: ${abbrevslist}`): errors = errors;
+    }
+   
+    if(siapeslist !== undefined) {
+        if(Array.isArray(abbrevslist) === true) {
+            abbrevslist.forEach(abbrev => {
+                if(isAbbrev(abbrev) === false)
+                    errors.push(`Invalid abbreviation: ${abbrev}`);
+            });
+        }
+        else isAbbrev(abbrevslist) === false? errors.push(`Invalid abbreviation: ${abbrevslist}`): errors = errors;
     }
 
-    return true, errors// errors.length > 0 ? errors : true;
+    isValid = errors.length === 0;
+    return {isValid, errors};
 }
 
 module.exports = {
