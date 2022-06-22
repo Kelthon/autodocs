@@ -1,33 +1,36 @@
 const express = require("express");
+const { isLogged } = require("../../middlewares/login");
 const loginStatus = require("../../middlewares/login");
 const User = require("../../models/user");
 const { isSiape } = require("../../utils/validator");
 const router = express.Router();
 
 router.post("/login", loginStatus.isNotLogged, (req, res) => {
-    let stat, msg;
     const { account } = req.body;
-    console.log(req.originalUrl, req.url)
-
-    console.log(req.body, account, isSiape(account));
     
     if(isSiape(account) == true) {
-        try {
-            const user = User.findOne({ where: { siape: account }});
-            req.session.isLogged = true;
-            stat = 200;
-            msg = "You was logged in!";
-        } catch(err) {
+        let msg, stat;
+        User.findOne({ where: { siape: account }}).then( user => {
+           req.session.name = user.name;
+           req.session.email = user.email;
+           req.session.title = user.title;
+           req.session.isLogged = true;
+           stat = 200;
+           msg = "You was logged in!";
+        }).catch((err) => {
+            console.log(err)
             stat = 404;
             msg = "User not found!";
-        }
+        }).finally(() => {
+            res.status(stat).json({
+                message: msg
+            })
+        })
     } else {
-        stat = 404;
-        msg = "Invalid Siape";
+        res.status(400).json({
+            message: "Invalid Siape"
+        })
     }
-        res.status(stat).json({
-            message: msg
-    })
 });
 
 router.get("/logout", loginStatus.isLogged, (req, res) => {

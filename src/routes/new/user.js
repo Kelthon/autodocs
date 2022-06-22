@@ -31,13 +31,16 @@ router.post("/new/user", loginStatus.isNotLogged, (req, res) => {
                 stat = 200;
                 msg = "User was created successfully!";
                 result = newuser;
+                req.session.name = newuser.name;
+                req.session.email = newuser.email;
+                req.session.title = newuser.title;
                 req.session.isLogged = true;
             } catch(err) {
                 stat = 500;
                 msg = "Error to save new User";
                 console.log(msg + "\n" + err);
             }
-        } catch(err) {
+        } catch(err) {  
             stat = 500;
             msg = "Error to build new User";
             console.log(msg + "\n" + err);
