@@ -1,6 +1,7 @@
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const express = require("express");
+const cors = require("cors");
 const login = require("./routes/authentication/auth");
 const docs = require("./routes/new/doc");
 const user = require("./routes/new/user");
@@ -9,6 +10,9 @@ const database = require("./database/index");
 const port = 8080;
 const app = express();
 
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -21,11 +25,8 @@ app.use(login);
 app.use(user);
 app.use(docs);
 
-app.get('/', (req, res) => {
-    res.status(200).json({
-        status: 200,
-        msg: "Auto Docs"
-    });
+app.get('/api', (req, res) => {
+    res.status(204).send();
 })
 
 app.listen(port, () => {
