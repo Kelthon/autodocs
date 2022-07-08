@@ -1,12 +1,15 @@
 import './App.css';
-import Navbar from './components/Navbar';
+import Menu from './components/Navbar';
 import Footer from './components/Footer';
 import RouterList from './routes';
+import { Container } from 'react-bootstrap';
 function App() {
   return (
     <div className="App">
-      <Navbar/>
-      <RouterList/>
+      <Menu/>
+      <Container>
+        <RouterList/>
+      </Container>
       <Footer/>
     </div>
   );
