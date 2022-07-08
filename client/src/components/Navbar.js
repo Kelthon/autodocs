@@ -1,28 +1,32 @@
 import React from "react";
 import { Link } from "react-router-dom"
+import {
+    Navbar,
+    Container,
+} from "react-bootstrap"
 
-function Navbar ({ children }) {
+function Menu ({ children }) {
     return (
         <>
-            <nav className="App-header">
+            <Navbar className="App-header">
                 <ul className="App-header-navbar">
                     <div className="App-header-logo">
-                        <Link to="/login/">Início</Link>
+                        <Link to="/">Início</Link>
                     </div>
                     <li className="App-header-navbar-item">
                         <Link to="/">Início</Link>
                     </li>
-                    <li>
+                    <li className="App-header-navbar-item">
                         <Link to="/new/doc">Novo documento</Link>
                     </li>
-                    <li>
-                        <Link to="/new/doc">login/sair</Link>
+                    <li className="App-header-navbar-item">
+                        <Link to="/login/">login/sair</Link>
                     </li>
                     {children}
                 </ul>
-            </nav>
+            </Navbar> 
         </>
     );
 }
 
-export default Navbar;
+export default Menu;
