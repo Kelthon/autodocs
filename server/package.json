@@ -21,6 +21,7 @@
     "uuid4": "^2.0.2"
   },
   "scripts": {
-    "dev": "nodemon"
+    "start": "nodemon",
+    "build": "node src/index.js"
   }
 }
