@@ -4,7 +4,7 @@ const { tcc1 } = require("../../middlewares/tcc1");
 
 const router  = express.Router();
 
-router.post('/new/doc/:id', isLogged, tcc1, (req, res) => {
+router.post('/api/new/doc/:id', isLogged, tcc1, (req, res) => {
     res.status(204).send();
 })
 
