@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useNavigate} from "react-router-dom";
+import React from "react"
 import {
     Button,
     Form,
@@ -11,27 +10,16 @@ import api from "../services/api"
 function Login() {
     
     const [siape, setSiape] = React.useState();
-    const [logged, setLogged] = React.useState();
-    const navigate = useNavigate()
-
     const onSiape = ({target: {value}}) => setSiape(value)
     const onSubmitForm = event => {
-        event.preventDefault()
-        
-        api.post("/login", { account: siape }).then(res => {
-            if(res.status == 200) {
-                setLogged(true);
-            }
-        })
-            
+        event.preventDefault();
+        api.post("/api/login", { account: siape }).then(res => {
+            console.log(res.data)
+        }).catch(err => {
+            console.log("Falha de autenticação\n")
+        });
         onSiape();
     }
-    
-    useEffect(() => {
-        if(logged) {
-            return navigate("/");
-        }
-    }, []);
 
     return(
         <Container>
@@ -42,9 +30,6 @@ function Login() {
                     <Form.Control onChange={onSiape} value={siape} type="text" placeholder="Siape" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Não sou um robô" />
-                </Form.Group>
                 <Button variant="primary" type="submit">
                     Entrar
                 </Button>
@@ -53,4 +38,4 @@ function Login() {
     );
 }
 
-export default Login
+export default Login;
