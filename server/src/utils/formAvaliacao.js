@@ -1,9 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const pdf = require("pdfkit");
-const date = require("../utils/date");
+const notFoundImages = require("./notFoundImages");
 
-const publicFolder = path.join(__dirname, "../..", "public");
+const publicFolder = path.join(__dirname, "..", "..", "public");
 const filesFolder = path.join(publicFolder, "files");
 
 module.exports = function formAvaliacao (
@@ -21,6 +21,11 @@ module.exports = function formAvaliacao (
     presentationDate,               // data da defesa 
     presentationHour,               // hora da defesa
 ) {
+    const images = notFoundImages();
+    if(images.exist) {
+        throw new Error(images.error);
+    }
+
     const docPath = path.join(filesFolder, filename);
     const doc = new pdf({
         size: "A4",
@@ -40,6 +45,7 @@ module.exports = function formAvaliacao (
         
         .fontSize(12).font("Times-Bold").text(`Título: "${projectTitle.toUpperCase()}"`, { align: "justify"})
         .moveDown()
+
         
         .font("Times-Bold").text("Orientando (a): ", {continued: true})
         .font("Times-Roman").text(`${studentName}`)

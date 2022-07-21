@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const pdf = require("pdfkit");
 const date = require("../utils/date");
+const notFoundImages = require("./notFoundImages");
 
 const publicFolder = path.join(__dirname, "../..", "public");
 const filesFolder = path.join(publicFolder, "files");
@@ -17,6 +18,11 @@ module.exports = function declarationOrientador (
     coordinatorSiape,
     jobTitle,
 ) {
+    const images = notFoundImages();
+    if(images.exist) {
+        throw new Error(images.error);
+    }
+
     const docPath = path.join(filesFolder, filename);
     const doc = new pdf({
         size: "A4",
