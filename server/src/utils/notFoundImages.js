@@ -19,6 +19,7 @@ module.exports = () => {
     try {
         if(!fs.existsSync(path.join(__dirname, "..", "..", "public"))) {
             fs.mkdirSync(publicFolder);
+            fs.mkdirSync(path.join(publicFolder, "files"));
             fs.mkdirSync(imagesFolder);
         }
     } catch(err) {
