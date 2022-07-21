@@ -8,7 +8,7 @@ try {
     console.log("DB was connected successfully!");
 
     try {
-        sequelize.sync({ force: true });
+        sequelize.sync({ force: false });
         console.log("All models were synchronized successfully.");
     } catch(err) {
         console.log("failure to sync models to DB!\n" + err);
