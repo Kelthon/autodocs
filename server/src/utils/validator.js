@@ -85,6 +85,21 @@ function validateFields({
     return {isValid, errors};
 }
 
+function validateCoordinator(coordinatorId, signPath, viceId, viceSignPath, active) {
+    let errors = [], isValid;
+
+    if(typeof(parseInt(coordinatorId))  != "number" || typeof(parseInt(viceId)) != "number") {
+        errors.push(`${coordinatorId} and ${viceId} must be numbers`)
+    }
+
+    if(signPath.length <= 3 || viceSignPath.length <= 3) {
+        errors.push(`${signPath} and ${viceSignPath} very short`)
+    }
+
+    isValid = errors.length === 0;
+    return {isValid, errors};
+}
+
 module.exports = {
-    isSiape, isEmail, isName, isPhone, isAbbrev, validateFields
+    isSiape, isEmail, isName, isPhone, isAbbrev, validateFields, validateCoordinator
 }
