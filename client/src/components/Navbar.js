@@ -1,11 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom"
-import {
-    Navbar,
-    Container,
-} from "react-bootstrap"
+import { Navbar } from "react-bootstrap"
 
-function Menu ({ children }) {
+function Menu({children}) {
+    
     return (
         <>
             <Navbar className="App-header">
@@ -20,7 +18,7 @@ function Menu ({ children }) {
                         <Link to="/new/doc">Novo documento</Link>
                     </li>
                     <li className="App-header-navbar-item">
-                        <Link to="/login/">login/sair</Link>
+                        <Link to="/login">Entrar</Link>
                     </li>
                     {children}
                 </ul>
