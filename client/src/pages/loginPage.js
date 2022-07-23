@@ -1,24 +1,30 @@
-import React from "react"
-import {
-    Button,
-    Form,
-    Container,
-} from "react-bootstrap"
+import React, { useContext, useState } from "react"
+import { Button, Form, Container} from "react-bootstrap"
+import { useNavigate } from "react-router-dom";
 
 import api from "../services/api"
+import { AuthContext } from "../contexts/authcontext";
 
-function Login() {
+function LoginPage() {
     
-    const [siape, setSiape] = React.useState();
-    const onSiape = ({target: {value}}) => setSiape(value)
-    const onSubmitForm = event => {
+    const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [siape, setSiape] = useState('');
+
+    const onAccount = event => setSiape(event === undefined ? '' : event.target.value);
+
+    const onSubmitForm = async event => {
         event.preventDefault();
-        api.post("/api/login", { account: siape }).then(res => {
-            console.log(res.data)
+
+        await api.post("/api/login", { account: siape }).then(res => {
+            const { user, token } = res.data;
+            if(user == null);
+            else navigate("/", {replace: true});
+            
+            login(user.id, token);
         }).catch(err => {
-            console.log("Falha de autenticação\n")
+            onAccount();
         });
-        onSiape();
     }
 
     return(
@@ -27,7 +33,7 @@ function Login() {
             <Form onSubmit={onSubmitForm}>
                 <Form.Group className="mb-3" controlId="formSiape">
                     <Form.Label>Siape</Form.Label>
-                    <Form.Control onChange={onSiape} value={siape} type="text" placeholder="Siape" />
+                    <Form.Control onChange={onAccount} defaultValue={siape} type="text" placeholder="Siape" />
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
@@ -38,4 +44,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default LoginPage;
