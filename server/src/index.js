@@ -2,12 +2,15 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const express = require("express");
 const cors = require("cors");
-const login = require("./routes/authentication/auth");
-const docs = require("./routes/new/doc");
-const user = require("./routes/new/user");
-const database = require("./database/index");
-const coordinator = require("./routes/new/coordinator");
-const editCoordinator = require("./routes/edit/coordinator");
+
+const database = require("./database/db");
+
+// Routes
+const login = require("./routes/authentication/authRoute");
+const docs = require("./routes/new/newDocRoute");
+const user = require("./routes/new/newUserRoute");
+const coordinator = require("./routes/new/newCoordinatorRoute");
+const editCoordinator = require("./routes/edit/editCoordinatorRoute");
 
 const port = 8080;
 const app = express();

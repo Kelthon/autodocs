@@ -1,4 +1,4 @@
-const Coordinator = require("../../models/coordinator")
+const Coordinator = require("../../models/coordinatorModel")
 const express = require("express");
 const router = express.Router();
 const validator = require("../../utils/validator")

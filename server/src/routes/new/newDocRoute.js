@@ -1,5 +1,5 @@
 const express = require("express");
-const { tcc1 } = require("../../middlewares/tcc1");
+const { tcc1 } = require("../../middlewares/tcci");
 
 const router  = express.Router();
 

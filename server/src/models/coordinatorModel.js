@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database/index");
+const sequelize = require("../database/db");
 
 const Coordinator = sequelize.define("coordinator", {
     id: {

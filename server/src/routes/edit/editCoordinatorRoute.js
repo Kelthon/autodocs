@@ -1,6 +1,6 @@
-const Coordinator = require("../../models/coordinator");
 const express = require("express");
-const User = require("../../models/user");
+const Coordinator = require("../../models/coordinatorModel");
+const User = require("../../models/userModel");
 const router = express.Router();
 
 router.post("/api/edit/coordinator", async (req, res) => {
