@@ -1,23 +1,27 @@
 import React from "react";
-import { 
-    Routes,
-    Route,
-} from "react-router-dom"
+import { Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import TCCForm1 from "./pages/TCCForm1"
+import HomePage from "./pages/homePage";
+import LoginPage from "./pages/loginPage";
+import TcciFormPage from "./pages/tccFormPage";
+import { AuthProvider } from "./contexts/authcontext";
+import PrivateRoute from "./utils/privateRoute";
+import LogoutPage from "./pages/logoutPage";
 
 function RouterList() {
+    
     return (
-        <Routes>
-            <Route path="/" element={ <Home/>}/>
-            <Route path="login" element={ <Login/> }/>
-            <Route path="new">
-                <Route path="doc" element={ <TCCForm1/> }/>
-            </Route>
-        </Routes>
+        <AuthProvider>
+            <Routes>
+                <Route path="/" element={ <HomePage/>}/>
+                <Route path="login" element={ <LoginPage/> }/>
+                <Route path="logout" element={ <LogoutPage/> }/>
+                <Route path="new">
+                    <Route path="doc" element={<PrivateRoute><TcciFormPage/></PrivateRoute>}/>
+                </Route>
+            </Routes>
+        </AuthProvider>
     )
 }
 
-export default RouterList
+export default RouterList;
