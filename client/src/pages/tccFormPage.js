@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 
@@ -38,73 +38,110 @@ function TcciFormPage({children}) {
         }).then(res => {
             return navigate("/", { replace: true });
         }).catch(err => {
-            console.log("Error: " + err.message);
             return navigate("/new/doc", { replace: true });
         })  
     };
 
     return(
-        <Container>
+
+        <Container fluid="grid">
             {children}
-            <h1>Novo documento TCC 1</h1>
+            <section>
             <Form onSubmit={handleForm}>
-                <Form.Group onChange={event => { setTitle(event.target.value) }}>
-                    <Form.Label>Título do projeto</Form.Label>
-                    <Form.Control defaultValue={title} type="text" placeholder="Título do projeto"/>
-                </Form.Group>
+                <h1 className="mt-4">Formulário para trabalho de conclusão de curso I</h1>
+                <Row>
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setTitle(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Título do projeto<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={title} type="text" placeholder="Título do projeto"/>
+                        </Form.Group>
+                    </Col>
 
-                <Form.Group onChange={event => { setStudentName(event.target.value) }}>
-                    <Form.Label>Nome do estudante</Form.Label>
-                    <Form.Control defaultValue={studentName} type="text" placeholder="Nome do estudante"/>
-                </Form.Group>
+                </Row>
+                <Row>
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setStudentName(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Nome completo do estudante<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={studentName} type="text" placeholder="Nome do estudante"/>
+                        </Form.Group>
+                    </Col>
+                    
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setStudentRegistration(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Número de matrícula do Estudante<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={studentRegistration} type="text" placeholder="Matrícula do Estudante"/>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setSecondMemberName(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Nome do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={secondMemberName} type="text" placeholder="Nome do 2° Membro da Banca"/>
+                        </Form.Group> 
+                    </Col>
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setSecondMemberTitle(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Título do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={secondMemberTitle} type="text" placeholder="Título do 2° Membro"/>
+                        </Form.Group>  
+                    </Col>
 
-                <Form.Group onChange={event => { setStudentRegistration(event.target.value) }}>
-                    <Form.Label>Matrícula do Estudante</Form.Label>
-                    <Form.Control defaultValue={studentRegistration} type="text" placeholder="Matrícula do Estudante"/>
-                </Form.Group>
+                </Row>
+                <Row className="mt-3 mb-0">
+                    <Form.Group className=" d-flex justify-content-start">
+                        <Form.Switch className="mt-3" onChange={event => {setThirdMember(!thirdMember ? true : false)}} id="thirdM"></Form.Switch>
+                        <Form.Label className="text-nowrap mt-3" htmlFor="thirdM">Adcionar um 3° Membro da Banca</Form.Label>
+                    </Form.Group>
+                </Row>
+                
+                {
+                    thirdMember && 
+                    <Row>
+                        <Col className="mt-2">
+                            <Form.Group  onChange={event => { setThirdMemberName(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Nome do terceiro Membro da Banca</Form.Label>
+                                <Form.Control defaultValue={thirdMemberName} type="text" placeholder="Nome do 3° Membro da Banca"/>
+                            </Form.Group>
+                        </Col>
 
-                <Form.Group onChange={event => { setSecondMemberName(event.target.value) }}>
-                    <Form.Label>Nome do 2° Membro da Banca</Form.Label>
-                    <Form.Control defaultValue={secondMemberName} type="text" placeholder="Nome do 2° Membro da Banca"/>
-                </Form.Group> 
+                        <Col className="mt-2">
+                            <Form.Group onChange={event => { setThirdMemberTitle(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Título do terceiro Membro da Banca</Form.Label>
+                                <Form.Control defaultValue={thirdMemberTitle} type="text" placeholder="Título do 3° Membro"/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                }
 
-                <Form.Group onChange={event => { setSecondMemberTitle(event.target.value) }}>
-                    <Form.Label>Título do 2° Membro</Form.Label>
-                    <Form.Control defaultValue={secondMemberTitle} type="text" placeholder="Título do 2° Membro"/>
-                </Form.Group>  
+                <Row>
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setPresentationDate(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Data da defesa<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={presentationDate} type="date"/>
+                        </Form.Group>
+                    </Col>
 
-                <Form.Group onChange={event => { event.target.value == "on" ? setThirdMember(true) : setThirdMember(false) }}>
-                    <Form.Label htmlFor="thirdM">3° membro</Form.Label>
-                    <Form.Switch id="thirdM"></Form.Switch>
-                </Form.Group>
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setPresentationHour(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Hora da defesa<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={presentationHour} type="time" placeholder="Hora da defesa"/>
+                        </Form.Group>
+                    </Col>
 
-                <Form.Group  onChange={event => { setThirdMemberName(event.target.value) }}>
-                    <Form.Label>Nome do 3° Membro da Banca</Form.Label>
-                    <Form.Control defaultValue={thirdMemberName} type="text" placeholder="Nome do 3° Membro da Banca"/>
-                </Form.Group>
-
-                <Form.Group onChange={event => { setThirdMemberTitle(event.target.value) }}>
-                    <Form.Label>Título do 3° Membro</Form.Label>
-                    <Form.Label defaultValue={thirdMemberTitle} type="text" placeholder="Título do 3° Membro"/>
-                </Form.Group>
-
-                <Form.Group onChange={event => { setPresentationRoom(event.target.value) }}>
-                    <Form.Label>Sala de apresentação</Form.Label>
-                    <Form.Control defaultValue={presentationRoom} type="text" placeholder="Sala de apresentação"/>
-                </Form.Group>
-
-                <Form.Group onChange={event => { setPresentationDate(event.target.value) }}>
-                    <Form.Label>Data da defesa</Form.Label>
-                    <Form.Control defaultValue={presentationDate} type="date"/>
-                </Form.Group>
-
-                <Form.Group onChange={event => { setPresentationHour(event.target.value) }}>
-                    <Form.Label>Hora da defesa</Form.Label>
-                    <Form.Control defaultValue={presentationHour} type="text" placeholder="Hora da defesa"/>
-                </Form.Group>
-
-                <Button type="submit">Criar</Button>
+                    <Col className="mt-2">
+                        <Form.Group onChange={event => { setPresentationRoom(event.target.value) }}>
+                            <Form.Label className="text-nowrap text-truncate">Sala de apresentação<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={presentationRoom} type="text" placeholder="Sala de apresentação"/>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <div className="vstack d-grid justify-content-center">
+                        <Form.Text className="mt-3 text-center">Campos com (<span className="text-danger">*</span>) são obrigatórios</Form.Text>
+                        <Button className="mt-5" type="submit">Criar</Button>
+                </div>
             </Form>
+            </section>
         </Container>
     );
 }
