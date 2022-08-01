@@ -1,3 +1,9 @@
+# Visual studio
+.vscode
+
+# Pdf docs
+*.pdf
+
 # Logs
 logs
 *.log
