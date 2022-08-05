@@ -1,9 +1,13 @@
-import React, { useState } from "react";
-import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
-import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+
+import api from "../services/api";
+import { useAuth } from "../contexts/authcontext";
 
 function TcciFormPage({children}) {
+
+    const {user} = useAuth()
 
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
@@ -24,6 +28,7 @@ function TcciFormPage({children}) {
 
         await api.post("/api/new/doc", {
             title: title,
+            professorId: user.id,
             studentName: studentName,
             studentRegistration: studentRegistration,
             studentPeriod: studentPeriod, 
@@ -139,6 +144,8 @@ function TcciFormPage({children}) {
                 <div className="vstack d-grid justify-content-center">
                         <Form.Text className="mt-3 text-center">Campos com (<span className="text-danger">*</span>) são obrigatórios</Form.Text>
                         <Button className="mt-5" type="submit">Criar</Button>
+                        
+                        {/* <p>{ user }</p> */}
                 </div>
             </Form>
             </section>
