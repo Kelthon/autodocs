@@ -1,23 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom"
 import { Container, Navbar, Button } from "react-bootstrap"
-import { AuthContext } from "../contexts/authcontext";
-import logo from "../logo.png"
+import { LoginOption, LogoutOption } from "./UserOptions";
+import { useAuth } from "../contexts/authcontext";
 
-function Menu({children}) {
+function Menu() {
+
+    const { authenticated } = useAuth()
     
-    const [menuOption, setMenuOption] =  useState(null)
-    const {authenticated, user} = useContext(AuthContext)
-
-    useEffect(() => {
-        console.log(user)
-        if(authenticated) {
-            setMenuOption(<Link className="nav-link link-light" to="/logout">Sair</Link>)
-        } else {
-            setMenuOption(<Link className="nav-link link-light" to="/login">Entrar</Link>)
-        }
-    }, [])
-
     return (
         <>
             <Navbar className="navbar navbar-expand-lg">
@@ -44,9 +34,8 @@ function Menu({children}) {
                                 <Link className="nav-link link-light" to="/new/doc">Novo documento</Link>
                             </li>
                             <li className="nav-item">
-                                {menuOption}
+                                { authenticated ? <LogoutOption/> : <LoginOption/> }
                             </li>
-                            {children}
                         </ul>
                     </div>
                 </Container>
