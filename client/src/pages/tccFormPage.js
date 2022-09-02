@@ -7,7 +7,8 @@ import { useAuth } from "../contexts/authcontext";
 
 function TcciFormPage({children}) {
 
-    const {user} = useAuth()
+    const { user, loading } = useAuth();
+    console.log(loading, user.current.id);
 
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
@@ -28,7 +29,7 @@ function TcciFormPage({children}) {
 
         await api.post("/api/new/doc", {
             title: title,
-            professorId: user.id,
+            professorId: user.current.id,
             studentName: studentName,
             studentRegistration: studentRegistration,
             studentPeriod: studentPeriod, 
@@ -41,6 +42,7 @@ function TcciFormPage({children}) {
             presentationDate: presentationDate, 
             presentationHour: presentationHour,
         }).then(res => {
+            console.log(res.data.errors != undefined ? res.data.errors : "nothing")
             return navigate("/", { replace: true });
         }).catch(err => {
             return navigate("/new/doc", { replace: true });
