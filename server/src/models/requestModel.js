@@ -8,6 +8,11 @@ const Request = sequelize.define("request", {
         autoIncrement: true
     },
 
+    projectTitle: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+
     studentName: {
         type: DataTypes.TEXT,
         allowNull: false
