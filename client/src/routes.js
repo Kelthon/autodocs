@@ -13,6 +13,7 @@ import TccRequestiEditPage from "./pages/TccRequestiEditPage";
 import PrivateRoute from "./utils/privateRoute";
 import AdminRoute from "./utils/adminRoute";
 import UserFormPage from "./pages/UserFormPage";
+import NotfoundPage from "./pages/NotFoundPage";
 
 function RouterList() {
     
@@ -32,6 +33,7 @@ function RouterList() {
                 <Route path="doc" element={<PrivateRoute><TcciFormPage/></PrivateRoute>}/>
                 <Route path="user" element={<PrivateRoute><UserFormPage/></PrivateRoute>}/>
             </Route>
+            <Route path="*" element={<NotfoundPage/>}/>
         </Routes>
     )
 }
