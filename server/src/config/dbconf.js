@@ -1,12 +1,11 @@
 module.exports = {
     dialect: "postgres",
-    host: "kesavan.db.elephantsql.com", 
-    username: "mkmbjxkp",
+    host: "postegres", 
+    username: "mautodocs",
     password: "I8Iknx_IUoZPOarjxhgkIboe-CPHz16J",
-    database: "mkmbjxkp",
+    database: "autodocs",
     define: {
         timestamps: true,
         underscored: true, 
     },
-    // logging: false
 };

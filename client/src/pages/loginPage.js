@@ -19,7 +19,8 @@ function LoginPage() {
             const { user, token } = res.data;
             login(user.id, token);
         }).catch(err => {
-            setError(err.message)
+            const errors = err.response.data.errors;
+            setError(errors ? errors : undefined);
             onAccount();
         }); 
     }

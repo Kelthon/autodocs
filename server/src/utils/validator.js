@@ -87,6 +87,10 @@ function validateFields({
 
 function validateCoordinator(coordinatorId, signPath, viceId, viceSignPath, active) {
     let errors = [], isValid;
+    if(!coordinatorId || !signPath || !viceId || ! viceSignPath) {
+        isValid = false;
+        errors.push("invalid arguments");
+    }
 
     if(typeof(parseInt(coordinatorId))  != "number" || typeof(parseInt(viceId)) != "number") {
         errors.push(`${coordinatorId} and ${viceId} must be numbers`)

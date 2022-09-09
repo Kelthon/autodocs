@@ -1,6 +1,5 @@
-const fs = require("fs")
-const nodemailer = require("nodemailer")
-
+const fs = require("fs");
+const transporter = require("../config/mailconf");
 const Coordinator = require("../models/coordinatorModel");
 const User = require("../models/userModel");
 const docFormAv = require("../utils/formAvaliacao");
@@ -9,7 +8,7 @@ const docDecOrientador = require("../utils/declaracaoOrientador");
 const date = require("../utils/date");
 
 module.exports = {
-    tcc1: async function (req, res, next) {
+    tcci: async function (req, res, next) {
         const 
         {
             projectTitle, 
@@ -59,16 +58,16 @@ module.exports = {
             errors.push("An Error occorred to try find coordinator");
             console.log(err);
         });     
-        
-        await User.findByPk(professorId).then(user => {
+
+        professorId ? await User.findByPk(professorId).then(user => {
             professorName = user.name;
             professorTitle = user.jobTitle;
             professorEmail = user.email;
         }).catch(err => {
             errors.push("An Error occorred to try find your user");
             console.log(err);
-            return res.status(400).json({errors: errors})
-        })
+            return res.status(400).json({errors: errors});
+        }) : errors.push("Login fail");
         
         const filenames = [
             `${date("YYYY-MM-DD")}-${studentRegistration} Declaração do Segundo Membro da Banca.pdf`,
@@ -136,39 +135,38 @@ module.exports = {
         }
 
         if(errors.length > 0) {
-            docs.forEach(element => {
-                if(fs.existsSync(element)) fs.unlinkSync(element)
-            });
+            docs.forEach(element => { if(fs.existsSync(element)) fs.unlinkSync(element) });
             return res.status(500).json({ errors: errors });
         } else {
 
-            const transpoter = nodemailer.createTransport({
-                host: "smtp.gmail.com",
-                port: 587,
-                secure: true,
-                auth: {
-                    type: "OAuth2",
-                    user: "",
-                    accessToken: "",
-                    clientId: "",
-                    clientSecret: "",
-                    refreshToken: "",
-                    expires: "",
-                },
-            });
+            const attachments = [];
 
-            await transpoter.sendMail({
-                from: "autodocs@example.com",
-                to: `kellth, <kellthgamer@gmail.com>`,
+            for(let i = 0 ; i < docs.length; i++) {
+                attachments.push({
+                    filename: filenames[i],
+                    path: docs[i],
+                    contentType: 'application/pdf'
+                });
+            }
+
+            const mailOptions = {
+                from: "Autodocs <kelthon2018@hotmail.com>",
+                to: `Kelthon, <kelthonbalbino@gmail.com>`,
                 subject: "solicitação de documentos",
                 html: '<h1>Olá fulano!</h1><p>Segue anexado a este email os documentos gerados automaticamente pelo <a href="http://localhost:3000/">autodocs</a></p><strong>Não responda essa mesagem</strong>',
-                attachment: { path: docs }
-            }).catch(err => {
-                errors.push("An Error occorred to try sent email")
-                console.log(err)
-                return res.status(500).json({errors: errors})
-            }).finally(() => docs.forEach(element => fs.unlinkSync(element)));
+                attachment: attachments
+            }
+
+            try {
+                transporter.sendMail(mailOptions, function (err, info) {
+                    docs.forEach(element => fs.unlinkSync(element));
+                    if(err) console.log(err);
+                });
+            } catch(err) {
+                console.log(err);
+            }
+                
+            next();
         }
-        next();
     }
 }
