@@ -4,7 +4,6 @@ const router = express.Router();
 
 
 router.post("/api/new/request", async (req, res) => {
-    console.log("Here");
     const {
         projectTitle, 
         studentName,

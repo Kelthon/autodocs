@@ -52,11 +52,11 @@ module.exports = {
                 coordinatorSiape = user.siape;
             }).catch(err => {
                 errors.push("An Error occorred to try find user coordinator");
-                console.log(err);
+                console.log(`autodocs: ${err.message}`);
             });
         }).catch(err => {
             errors.push("An Error occorred to try find coordinator");
-            console.log(err);
+            console.log(`autodocs: ${err.message}`);
         });     
 
         professorId ? await User.findByPk(professorId).then(user => {
@@ -65,7 +65,7 @@ module.exports = {
             professorEmail = user.email;
         }).catch(err => {
             errors.push("An Error occorred to try find your user");
-            console.log(err);
+            console.log(`autodocs: ${err.message}`);
             return res.status(400).json({errors: errors});
         }) : errors.push("Login fail");
         
@@ -130,7 +130,7 @@ module.exports = {
                     jobTitle,
                 ));
         } catch(err) {
-            console.log(err);
+            console.log(`autodocs: ${err.message}`);
             errors.push("An Error occorred to try create files");
         }
 
@@ -160,10 +160,10 @@ module.exports = {
             try {
                 transporter.sendMail(mailOptions, function (err, info) {
                     docs.forEach(element => fs.unlinkSync(element));
-                    if(err) console.log(err);
+                    if(err) console.log(`autodocs: ${err.message}`);
                 });
             } catch(err) {
-                console.log(err);
+                console.log(`autodocs: ${err.message}`);
             }
                 
             next();
