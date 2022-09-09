@@ -1,6 +1,7 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv").config();
 
 const session = require("./config/sessionconf");
 // Routes
@@ -15,7 +16,7 @@ const viewrequest = require("./routes/view/viewRequestRoute");
 const editCoordinator = require("./routes/edit/editCoordinatorRoute");
 const editUser = require("./routes/edit/editUserRoute");
 
-const port = 8080;
+const port = 8080 || process.env.PORT;
 const app = express();
 
 app.use(cors({ origin: 'http://localhost:3000' }));
@@ -39,4 +40,6 @@ app.use(viewuser);
 
 app.use(login);
 
-app.listen(port, () => { console.log(`serving on http://localhost:${port}/`) });
+app.listen(port, () => { console.log(`autodocs: serving on http://localhost:${port}/`) });
+
+module.exports=app;
