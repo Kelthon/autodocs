@@ -1,9 +1,9 @@
 const express = require("express");
-const { tcc1 } = require("../../middlewares/tcci");
+const { tcci } = require("../../middlewares/tcci");
 
 const router  = express.Router();
 
-router.post('/api/new/doc/', tcc1, (req, res) => {
+router.post('/api/new/doc/', tcci, (req, res) => {
     res.status(204).send();
 })
 

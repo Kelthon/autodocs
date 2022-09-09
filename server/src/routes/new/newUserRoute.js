@@ -28,14 +28,14 @@ router.post("/api/new/user", async (req, res) => {
                     let error = [];
                     error.push("Error to save new User: " + err.message);
                     error.push("possibly this user already exists");
-                    res.status(500).json({ errors: error});
+                    return res.json({ errors: error});
                 });
 
         } catch(err) {
-            res.status(500).json({ errors: "Error to build new User: " + err.message });
+            return res.json({ errors: "Error to build new User: " + err.message });
         };
     } else {
-        res.status(200).json({ errors: validate.errors });
+        return res.status(200).json({ errors: validate.errors });
     }
 })
 

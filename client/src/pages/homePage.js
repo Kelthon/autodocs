@@ -23,12 +23,7 @@ function HomePage() {
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
-                        </Link><br/>
-                        <Link  className="text-decoration-none" to="/logout" >
-                            <Card className="text-center" style={{width: "375px"}}>
-                                Sair
-                            </Card>
-                        </Link><br/>
+                        </Link>
                     </CardGroup>
                 </Col>
             </Row>

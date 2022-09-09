@@ -1,22 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import { Container, Navbar, Button } from "react-bootstrap"
-import { AuthContext } from "../contexts/authcontext";
-import logo from "../logo.png"
+import { LoginOption, LogoutOption } from "./UserOptions";
+import { useAuth } from "../contexts/authcontext";
+import api from "../services/api";
 
-function Menu({children}) {
-    
-    const [menuOption, setMenuOption] =  useState(null)
-    const {authenticated, user} = useContext(AuthContext)
+function Menu() {
+
+    const { authenticated, user } = useAuth();
+    const [adm, setAdm] = useState(false);
 
     useEffect(() => {
-        console.log(user)
         if(authenticated) {
-            setMenuOption(<Link className="nav-link link-light" to="/logout">Sair</Link>)
-        } else {
-            setMenuOption(<Link className="nav-link link-light" to="/login">Entrar</Link>)
+            api.get(`/api/typeuser/${user.current.id}`).then(res => {
+                setAdm(res.data === true?true:false);
+            });
         }
-    }, [])
+    }, [authenticated]);
+
+
 
     return (
         <>
@@ -44,9 +46,11 @@ function Menu({children}) {
                                 <Link className="nav-link link-light" to="/new/doc">Novo documento</Link>
                             </li>
                             <li className="nav-item">
-                                {menuOption}
+                            { adm && <Link className="nav-link link-light" to="/admin/panel">Painel de Controle</Link> }
                             </li>
-                            {children}
+                            <li className="nav-item">
+                                { authenticated ? <LogoutOption/> : <LoginOption/> }
+                            </li>
                         </ul>
                     </div>
                 </Container>

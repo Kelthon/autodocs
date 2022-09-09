@@ -1,4 +1,5 @@
-const fs = require("fs")
+const fs = require("fs");
+const transporter = require("../config/mailconf");
 const Coordinator = require("../models/coordinatorModel");
 const User = require("../models/userModel");
 const docFormAv = require("../utils/formAvaliacao");
@@ -7,17 +8,16 @@ const docDecOrientador = require("../utils/declaracaoOrientador");
 const date = require("../utils/date");
 
 module.exports = {
-    tcc1: async function (req, res, next) {
-        const {
+    tcci: async function (req, res, next) {
+        const 
+        {
             projectTitle, 
             studentName,
             studentRegistration,
             studentPeriod, 
             secondMemberName,
             secondMemberTitle,
-            professorName,
-            professorTitle,
-            professorEmail,
+            professorId,
             thirdMember,
             thirdMemberName,
             thirdMemberTitle,
@@ -25,12 +25,19 @@ module.exports = {
             presentationDate, 
             presentationHour,
         } = req.body;
+        
+        const errors = [], 
+                docs = []; 
+        let coordinatorName,
+            coordinatorSignature,
+            coordinatorSiape,
+            jobTitle,
+            professorName,
+            professorTitle,
+            professorEmail,
+            searchFor;
 
-        const errors = [], docs = []; 
-        let coordinatorName, coordinatorSignature, coordinatorSiape, jobTitle;
-        let searchFor;
-
-        const coordinator = await Coordinator.findByPk(1).then(async coord => {
+        await Coordinator.findByPk(1).then(async coord => {
             if(coord.active) {
                 jobTitle = "Coordenador"; 
                 searchFor = coord.coordinator;
@@ -39,19 +46,29 @@ module.exports = {
                 searchFor = coord.viceCoordinator;
             }
             
-            const userCoordinator = await User.findByPk(searchFor).then(user => {
+            await User.findByPk(searchFor).then(user => {
                 coordinatorName = user.name;
                 coordinatorSignature = coord.coordinatorSignaturePath; 
                 coordinatorSiape = user.siape;
             }).catch(err => {
-                errors.push(err.message);
+                errors.push("An Error occorred to try find user coordinator");
                 console.log(err);
             });
         }).catch(err => {
-            errors.push(err.message);
+            errors.push("An Error occorred to try find coordinator");
             console.log(err);
         });     
 
+        professorId ? await User.findByPk(professorId).then(user => {
+            professorName = user.name;
+            professorTitle = user.jobTitle;
+            professorEmail = user.email;
+        }).catch(err => {
+            errors.push("An Error occorred to try find your user");
+            console.log(err);
+            return res.status(400).json({errors: errors});
+        }) : errors.push("Login fail");
+        
         const filenames = [
             `${date("YYYY-MM-DD")}-${studentRegistration} Declaração do Segundo Membro da Banca.pdf`,
             `${date("YYYY-MM-DD")}-${studentRegistration} Formulário de Avaliação.pdf`,
@@ -114,13 +131,42 @@ module.exports = {
                 ));
         } catch(err) {
             console.log(err);
-            errors.push(err.message);
+            errors.push("An Error occorred to try create files");
         }
 
         if(errors.length > 0) {
-            docs.forEach(element => fs.unlinkSync(element));
+            docs.forEach(element => { if(fs.existsSync(element)) fs.unlinkSync(element) });
             return res.status(500).json({ errors: errors });
-        } else 
-        next();
+        } else {
+
+            const attachments = [];
+
+            for(let i = 0 ; i < docs.length; i++) {
+                attachments.push({
+                    filename: filenames[i],
+                    path: docs[i],
+                    contentType: 'application/pdf'
+                });
+            }
+
+            const mailOptions = {
+                from: "Autodocs <kelthon2018@hotmail.com>",
+                to: `Kelthon, <kelthonbalbino@gmail.com>`,
+                subject: "solicitação de documentos",
+                html: '<h1>Olá fulano!</h1><p>Segue anexado a este email os documentos gerados automaticamente pelo <a href="http://localhost:3000/">autodocs</a></p><strong>Não responda essa mesagem</strong>',
+                attachment: attachments
+            }
+
+            try {
+                transporter.sendMail(mailOptions, function (err, info) {
+                    docs.forEach(element => fs.unlinkSync(element));
+                    if(err) console.log(err);
+                });
+            } catch(err) {
+                console.log(err);
+            }
+                
+            next();
+        }
     }
 }
