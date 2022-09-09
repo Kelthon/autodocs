@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Row, Col } from "react-bootstrap";
 import api from "../services/api";
-import ColumnName from "../components/colName";
+import ColumnName from "./ColName";
 import { datef } from "../utils/datef";
 import { Link } from "react-router-dom";
 
@@ -16,7 +16,7 @@ function RowRequest({ id }) {
                 <Col>#{i.id}</Col>
                 <Col>{datef(i.updatedAt)}</Col>
                 <Col>{i.type}</Col>
-                <Link to={`edit/tcci/${i.id}`}>
+                <Link to={`/admin/edit/tcci/${i.id}`}>
                     <ColumnName id={i.id}/>
                 </Link>
                 <Col>{i.description}</Col>

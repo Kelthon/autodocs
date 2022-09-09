@@ -1,15 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-
+import React, { useState } from "react"
+import { Button, Container, Form, Row, Col } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import api from "../services/api";
-import { useAuth } from "../contexts/authcontext";
 
-function TcciFormPage() {
-
-    const { user, loading } = useAuth();
-
-    const navigate = useNavigate();
+function TcciReqEditPage() {
+    
+    const { id } = useParams();
+    const [ requestId, setRequestId ] = useState();
     const [title, setTitle] = useState("");
     const [studentName, setStudentName] = useState("");
     const [studentRegistration, setStudentRegistration] = useState("");
@@ -23,36 +20,34 @@ function TcciFormPage() {
     const [presentationDate, setPresentationDate] = useState("");
     const [presentationHour, setPresentationHour] = useState("");
 
-    const handleForm = async event => {
-        event.preventDefault();
+    api.get(`/api/view/request/${id}`).then(res => {
+        const request = res.data;
+        setRequestId(request.id);
+        setTitle(request.projectTitle);
+        setStudentName(request.studentName);
+        setStudentRegistration(request.studentRegistration);
+        setStudentPeriod(request.studentPeriod);
+        setSecondMemberName(request.secondMemberName);
+        setSecondMemberTitle(request.secondMemberTitle);
+        setThirdMember(request.thirdMember);
+        setThirdMemberName(request.thirdMemberName);
+        setThirdMemberTitle(request.thirdMemberTitle);
+        setPresentationRoom(request.presentationRoom);
+        setPresentationDate(request.presentationDate);
+        setPresentationHour(request.presentationHour);
+    });
+    
+    const handleForm = event => {
+        event.preventDeafult();
+    }
 
-        await api.post("/api/new/doc", {
-            title: title,
-            professorId: user.current.id,
-            studentName: studentName,
-            studentRegistration: studentRegistration,
-            studentPeriod: studentPeriod, 
-            secondMemberName: secondMemberName,
-            secondMemberTitle: secondMemberTitle,
-            thirdMember: true,
-            thirdMemberName: thirdMemberName,
-            thirdMemberTitle: thirdMemberTitle,
-            presentationRoom: presentationRoom, 
-            presentationDate: presentationDate, 
-            presentationHour: presentationHour,
-        }).then(res => {
-            return navigate("/", { replace: true });
-        }).catch(err => {
-            return navigate("/new/doc", { replace: true });
-        })  
-    };
-
-    return(
-
+    return (
         <Container fluid="grid">
             <section>
             <Form onSubmit={handleForm}>
-                <h1 className="mt-4">Formulário para trabalho de conclusão de curso I</h1>
+
+                <h1 className="mt-4">Edição #{requestId}</h1>
+                <h4 className="mt-4">Tipo formulário para trabalho de conclusão de curso I</h4>
                 <Row>
                     <Col className="mt-2">
                         <Form.Group onChange={event => { setTitle(event.target.value) }}>
@@ -142,9 +137,7 @@ function TcciFormPage() {
                 </Row>
                 <div className="vstack d-grid justify-content-center">
                         <Form.Text className="mt-3 text-center">Campos com (<span className="text-danger">*</span>) são obrigatórios</Form.Text>
-                        <Button className="mt-5" type="submit">Criar</Button>
-                        
-                        {/* <p>{ user }</p> */}
+                        <Button variant="success" className="mt-5" type="submit">Aceitar</Button>  
                 </div>
             </Form>
             </section>
@@ -152,4 +145,4 @@ function TcciFormPage() {
     );
 }
 
-export default TcciFormPage;
+export default TcciReqEditPage;

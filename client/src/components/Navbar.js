@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import { Container, Navbar, Button } from "react-bootstrap"
 import { LoginOption, LogoutOption } from "./UserOptions";
 import { useAuth } from "../contexts/authcontext";
+import api from "../services/api";
 
 function Menu() {
 
-    const { authenticated } = useAuth()
-    
+    const { authenticated, user } = useAuth();
+    const [adm, setAdm] = useState(false);
+
+    useEffect(() => {
+        if(authenticated) {
+            api.get(`/api/typeuser/${user.current.id}`).then(res => {
+                setAdm(res.data === true?true:false);
+            });
+        }
+    }, [authenticated]);
+
+
+
     return (
         <>
             <Navbar className="navbar navbar-expand-lg">
@@ -32,6 +44,9 @@ function Menu() {
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link link-light" to="/new/doc">Novo documento</Link>
+                            </li>
+                            <li className="nav-item">
+                            { adm && <Link className="nav-link link-light" to="/admin/panel">Painel de Controle</Link> }
                             </li>
                             <li className="nav-item">
                                 { authenticated ? <LogoutOption/> : <LoginOption/> }

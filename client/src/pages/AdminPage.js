@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Badge, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import RequestPage from "./RequestPage";
 
 function AdminPage() {
     return (
@@ -18,11 +17,11 @@ function AdminPage() {
                         Gerenciar solicitações de documentos
                         </div>
                         <Badge bg="primary" pill>
-                        14
+                        
                         </Badge>
                     </ListGroup.Item>
                 </Link>
-                <Link to="" className="text-decoration-none">
+                <Link to="../edit/coordinator" className="text-decoration-none">
                     <ListGroup.Item action
                         as="li"
                         className="d-flex justify-content-between align-items-start"
@@ -32,11 +31,11 @@ function AdminPage() {
                         Opcões do cooordenador 
                         </div>
                         <Badge bg="primary" pill>
-                        14
+                        
                         </Badge>
                     </ListGroup.Item>
                 </Link>
-                <Link to="" className="text-decoration-none">
+                <Link to="/new/user" className="text-decoration-none">
                     <ListGroup.Item action
                         as="li"
                         className="d-flex justify-content-between align-items-start"
@@ -46,11 +45,11 @@ function AdminPage() {
                         Cadastar novo usuario
                         </div>
                         <Badge bg="primary" pill>
-                        14
+                        
                         </Badge>
                     </ListGroup.Item>
                 </Link>
-                <Link to="" className="text-decoration-none">
+                <Link to="../edit/user/" className="text-decoration-none">
                     <ListGroup.Item action
                         as="li"
                         className="d-flex justify-content-between align-items-start"
@@ -60,11 +59,11 @@ function AdminPage() {
                         Editar usuarios
                         </div>
                         <Badge bg="primary" pill>
-                        14
+                        
                         </Badge>
                     </ListGroup.Item>
                 </Link>
-                <Link to="" className="text-decoration-none">
+                <Link to="../delete/user/" className="text-decoration-none">
                     <ListGroup.Item action
                         as="li"
                         className="d-flex justify-content-between align-items-start"
@@ -74,7 +73,7 @@ function AdminPage() {
                         Excluir usuarios
                         </div>
                         <Badge bg="primary" pill>
-                        14
+                        
                         </Badge>
                     </ListGroup.Item>
                 </Link>

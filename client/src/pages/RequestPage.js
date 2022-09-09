@@ -1,6 +1,6 @@
 import React from "react"
 import { Col, Container, Row } from "react-bootstrap";
-import RowRequest from "./RowRequest";
+import RowRequest from "../components/RowRequest";
 
 function RequestPage() {
     return (
