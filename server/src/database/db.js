@@ -3,19 +3,23 @@ const db = require("../config/dbconf");
 
 const sequelize = new Sequelize(db);
 
-try {
-    sequelize.authenticate();
-    console.log("DB was connected successfully!");
-
+const connect = async() => {
     try {
-        sequelize.sync({ force: false });
-        console.log("All models were synchronized successfully.");
-    } catch(err) {
-        console.log("failure to sync models to DB!\n" + err);
-    }
+        await sequelize.authenticate();
+        console.log("DB was connected successfully!");
 
-} catch(err) {
-    console.log("failure to connect DB!\n" + err);
+        try {
+            sequelize.sync({ force: false });
+            console.log("All models were synchronized successfully.");
+        } catch(err) {
+            console.log("failure to sync models to DB!\n" + err);
+        }
+
+    } catch(err) {
+        console.log("failure to connect DB!\n" + err);
+    }
 }
+
+connect();
 
 module.exports = sequelize;
