@@ -1,6 +1,6 @@
 module.exports = {
     dialect: "postgres",
-    host: "postegres", 
+    host: "postgres", 
     username: "mautodocs",
     password: "I8Iknx_IUoZPOarjxhgkIboe-CPHz16J",
     database: "autodocs",
