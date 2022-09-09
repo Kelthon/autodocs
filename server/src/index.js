@@ -15,7 +15,6 @@ const viewrequest = require("./routes/view/viewRequestRoute");
 const editCoordinator = require("./routes/edit/editCoordinatorRoute");
 const editUser = require("./routes/edit/editUserRoute");
 
-
 const port = 8080;
 const app = express();
 
