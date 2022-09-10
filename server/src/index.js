@@ -1,7 +1,7 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv").config();
+require("dotenv/config");
 
 const session = require("./config/sessionconf");
 // Routes
@@ -16,11 +16,10 @@ const viewrequest = require("./routes/view/viewRequestRoute");
 const editCoordinator = require("./routes/edit/editCoordinatorRoute");
 const editUser = require("./routes/edit/editUserRoute");
 
-const port = 8080 || process.env.PORT;
+const port = process.env.PORT;
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:3000' }));
-// app.use(cors({ origin: 'https://www.autodocs.tk' }));
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

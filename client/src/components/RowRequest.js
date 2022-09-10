@@ -12,15 +12,15 @@ function RowRequest({ id }) {
     api.get("/api/view/requests/").then(res => {
         setRows(res.data);
         if(rows !== undefined) setLines(rows.map(i =>
-            <Row key={i.id}>
-                <Col>#{i.id}</Col>
-                <Col>{datef(i.updatedAt)}</Col>
-                <Col>{i.type}</Col>
-                <Link to={`/admin/edit/tcci/${i.id}`}>
-                    <ColumnName id={i.id}/>
-                </Link>
-                <Col>{i.description}</Col>
-            </Row>
+            <Link className="text-decoration-none" to={`/admin/edit/tcci/${i.id}`}>
+                <Row key={i.id}>
+                    <Col>#{i.id}</Col>
+                    <Col>{datef(i.updatedAt)}</Col>
+                    <Col>{i.type}</Col>
+                        <ColumnName id={i.id}/>
+                    <Col>{i.description}</Col>
+                </Row>
+            </Link>
         ));
     });
 
