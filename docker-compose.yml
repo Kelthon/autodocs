@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+  
+  postgres:
+    image: postgres:11-bullseye
+    restart: always
+    environment:
+      POSTGRES_USER: autodocs
+      POSTGRES_PASSWORD: I8Iknx_IUoZPOarjxhgkIboe-CPHz16J
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    networks:
+      - web
+
+  backend:
+    build: .
+    image: node:18-autodocs
+    container_name: autodocs_backend
+    restart: always
+    env_file: .env
+    depends_on:
+      - "postgres"
+    ports:
+      - "11000:8080"
+    command: "sh iniciar.sh"
+    volumes:
+      - ./app/autodocs/server:/home/node/app
+    networks:
+      - web
+  
+  frontend:
+    image: node:18-autodocs
+    container_name: autodocs_frontend
+    restart: always
+    env_file: .env
+    depends_on:
+      - "backend"
+    ports:
+      - "11001:3000"
+    command: "sh iniciar.sh"
+    volumes:
+      - ./app/autodocs/client:/home/node/app
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
