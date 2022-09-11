@@ -1,11 +1,13 @@
 const fs = require("fs");
-const transporter = require("../config/mailconf");
+const sentMail = require("../config/mailconf");
+const { mail } = require("../utils/mail");
 const Coordinator = require("../models/coordinatorModel");
 const User = require("../models/userModel");
 const docFormAv = require("../utils/formAvaliacao");
 const docDecMember = require("../utils/declaracaoMember");
 const docDecOrientador = require("../utils/declaracaoOrientador");
 const date = require("../utils/date");
+const { consumers } = require("stream");
 
 module.exports = {
     tcci: async function (req, res, next) {
@@ -140,7 +142,8 @@ module.exports = {
         } else {
 
             const attachments = [];
-
+            let mailOptions;
+            
             for(let i = 0 ; i < docs.length; i++) {
                 attachments.push({
                     filename: filenames[i],
@@ -148,23 +151,22 @@ module.exports = {
                     contentType: 'application/pdf'
                 });
             }
-
-            const mailOptions = {
-                from: "Autodocs <kelthon2018@hotmail.com>",
-                to: `Kelthon, <kelthonbalbino@gmail.com>`,
-                subject: "solicitação de documentos",
-                html: '<h1>Olá fulano!</h1><p>Segue anexado a este email os documentos gerados automaticamente pelo <a href="http://localhost:3000/">autodocs</a></p><strong>Não responda essa mesagem</strong>',
-                attachment: attachments
-            }
+            
+            mailOptions = mail(professorName, professorEmail, "Envio dos documentos", "Envio dos documentos", attachments);
 
             try {
-                transporter.sendMail(mailOptions, function (err, info) {
-                    docs.forEach(element => fs.unlinkSync(element));
-                    if(err) console.log(`autodocs: ${err.message}`);
+                sentMail(mailOptions).then(result => console.log("autodocs: Email sent", result)).catch(err => {
+                    errors.push(err.message);
+                    console.log(`autodocs: ${err.message}`);
                 });
+                
+                docs.forEach(element => { if(fs.existsSync(element)) fs.unlinkSync(element) });
             } catch(err) {
+                errors.push(err.message);
                 console.log(`autodocs: ${err.message}`);
             }
+
+            if(errors.length > 0) return res.json(errors);
                 
             next();
         }
