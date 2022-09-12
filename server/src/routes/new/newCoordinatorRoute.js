@@ -23,7 +23,7 @@ router.post("/api/new/coordinator", (req, res) => {
 
         }).catch(err => {
             res.status(500).json({ errors: err});
-            console.log("Error to save coordinator");
+            console.log("autodocs: Error to save coordinator");
         })
     } else {
         res.status(400).json({ errors: validate.errors });

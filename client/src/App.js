@@ -1,4 +1,3 @@
-import './App.css';
 import Menu from './components/Navbar';
 import Footer from './components/Footer';
 import RouterList from './routes';
@@ -11,7 +10,7 @@ function App() {
     <div className="App">
       <AuthProvider>
         <Menu/>
-          <Container>
+          <Container className="d-flex">
             <RouterList/>
           </Container>
         <Footer/>

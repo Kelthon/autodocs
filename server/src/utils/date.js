@@ -1,4 +1,4 @@
-const moment = require("moment")
+const moment = require("moment");
 
 // Definição da estrutura de formatação de horas no pradrão pt-br
 moment.defineLocale("pt-br", {
