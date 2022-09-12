@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <AuthProvider>
         <Menu/>
-          <Container>
+          <Container className="d-flex">
             <RouterList/>
           </Container>
         <Footer/>

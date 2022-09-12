@@ -1,11 +1,18 @@
 import React, { useState } from "react"
 import { Button, Container, Form, Row, Col } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
+import LoadingComponent from "../components/Loading"
+import { useAuth } from "../contexts/authcontext";
 
 function TcciReqEditPage() {
     
+    const navigate = useNavigate();
+    const { user } = useAuth();
     const { id } = useParams();
+    
+    const [ errors, setErrors ] = useState();
+    const [ loading, setLoading ] = useState(true);
     const [ requestId, setRequestId ] = useState();
     const [title, setTitle] = useState("");
     const [studentName, setStudentName] = useState("");
@@ -35,111 +42,138 @@ function TcciReqEditPage() {
         setPresentationRoom(request.presentationRoom);
         setPresentationDate(request.presentationDate);
         setPresentationHour(request.presentationHour);
+        setLoading(false);
     });
     
-    const handleForm = event => {
-        event.preventDeafult();
+    const handleForm = async event => {
+        event.preventDefault();
+        await api.post("/api/new/doc", {
+            title: title,
+            professorId: user.current.id,
+            studentName: studentName,
+            studentRegistration: studentRegistration,
+            studentPeriod: studentPeriod, 
+            secondMemberName: secondMemberName,
+            secondMemberTitle: secondMemberTitle,
+            thirdMember: true,
+            thirdMemberName: thirdMemberName,
+            thirdMemberTitle: thirdMemberTitle,
+            presentationRoom: presentationRoom, 
+            presentationDate: presentationDate, 
+            presentationHour: presentationHour,
+        }).then(res => {
+            if(res.data.errors) setErrors(res.data.errors);
+            else return navigate("/", { replace: true });
+        }).catch(err => {
+            return navigate("/new/doc", { replace: true });
+        })
     }
 
     return (
         <Container fluid="grid">
             <section>
-            <Form onSubmit={handleForm}>
-
-                <h1 className="mt-4">Edição #{requestId}</h1>
-                <h4 className="mt-4">Tipo formulário para trabalho de conclusão de curso I</h4>
-                <Row>
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setTitle(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Título do projeto<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={title} type="text" placeholder="Título do projeto"/>
-                        </Form.Group>
-                    </Col>
-
-                </Row>
-                <Row>
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setStudentName(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Nome completo do estudante<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={studentName} type="text" placeholder="Nome do estudante"/>
-                        </Form.Group>
-                    </Col>
-                    
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setStudentRegistration(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Número de matrícula do Estudante<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={studentRegistration} type="text" placeholder="Matrícula do Estudante"/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setSecondMemberName(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Nome do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={secondMemberName} type="text" placeholder="Nome do 2° Membro da Banca"/>
-                        </Form.Group> 
-                    </Col>
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setSecondMemberTitle(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Título do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={secondMemberTitle} type="text" placeholder="Título do 2° Membro"/>
-                        </Form.Group>  
-                    </Col>
-
-                </Row>
-                <Row className="mt-3 mb-0">
-                    <Form.Group className=" d-flex justify-content-start">
-                        <Form.Switch className="mt-3" onChange={event => {setThirdMember(!thirdMember ? true : false)}} id="thirdM"></Form.Switch>
-                        <Form.Label className="text-nowrap mt-3" htmlFor="thirdM">Adcionar um 3° Membro da Banca</Form.Label>
-                    </Form.Group>
-                </Row>
+            {loading &&
+                <LoadingComponent/>
+            }
+            {!loading &&
+                <Form onSubmit={handleForm}>
+                    <h1 className="mt-4">Edição #{requestId}</h1>
+                    <h4 className="mt-4">Tipo formulário para trabalho de conclusão de curso I</h4>
                 
-                {
-                    thirdMember && 
                     <Row>
                         <Col className="mt-2">
-                            <Form.Group  onChange={event => { setThirdMemberName(event.target.value) }}>
-                                <Form.Label className="text-nowrap text-truncate">Nome do terceiro Membro da Banca</Form.Label>
-                                <Form.Control defaultValue={thirdMemberName} type="text" placeholder="Nome do 3° Membro da Banca"/>
+                            <Form.Group onChange={event => { setTitle(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Título do projeto<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={title} type="text" placeholder="Título do projeto"/>
                             </Form.Group>
                         </Col>
 
+                    </Row>
+                    <Row>
                         <Col className="mt-2">
-                            <Form.Group onChange={event => { setThirdMemberTitle(event.target.value) }}>
-                                <Form.Label className="text-nowrap text-truncate">Título do terceiro Membro da Banca</Form.Label>
-                                <Form.Control defaultValue={thirdMemberTitle} type="text" placeholder="Título do 3° Membro"/>
+                            <Form.Group onChange={event => { setStudentName(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Nome completo do estudante<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={studentName} type="text" placeholder="Nome do estudante"/>
+                            </Form.Group>
+                        </Col>
+                        
+                        <Col className="mt-2">
+                            <Form.Group onChange={event => { setStudentRegistration(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Número de matrícula do Estudante<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={studentRegistration} type="text" placeholder="Matrícula do Estudante"/>
                             </Form.Group>
                         </Col>
                     </Row>
-                }
+                    <Row>
+                        <Col className="mt-2">
+                            <Form.Group onChange={event => { setSecondMemberName(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Nome do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={secondMemberName} type="text" placeholder="Nome do 2° Membro da Banca"/>
+                            </Form.Group> 
+                        </Col>
+                        <Col className="mt-2">
+                            <Form.Group onChange={event => { setSecondMemberTitle(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Título do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={secondMemberTitle} type="text" placeholder="Título do 2° Membro"/>
+                            </Form.Group>  
+                        </Col>
 
-                <Row>
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setPresentationDate(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Data da defesa<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={presentationDate} type="date"/>
+                    </Row>
+                    <Row className="mt-3 mb-0">
+                        <Form.Group className=" d-flex justify-content-start">
+                            <Form.Switch className="mt-3" onChange={event => {setThirdMember(!thirdMember ? true : false)}} id="thirdM"></Form.Switch>
+                            <Form.Label className="text-nowrap mt-3" htmlFor="thirdM">Adcionar um 3° Membro da Banca</Form.Label>
                         </Form.Group>
-                    </Col>
+                    </Row>
+                    
+                    {
+                        thirdMember && 
+                        <Row>
+                            <Col className="mt-2">
+                                <Form.Group  onChange={event => { setThirdMemberName(event.target.value) }}>
+                                    <Form.Label className="text-nowrap text-truncate">Nome do terceiro Membro da Banca</Form.Label>
+                                    <Form.Control defaultValue={thirdMemberName} type="text" placeholder="Nome do 3° Membro da Banca"/>
+                                </Form.Group>
+                            </Col>
 
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setPresentationHour(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Hora da defesa<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={presentationHour} type="time" placeholder="Hora da defesa"/>
-                        </Form.Group>
-                    </Col>
+                            <Col className="mt-2">
+                                <Form.Group onChange={event => { setThirdMemberTitle(event.target.value) }}>
+                                    <Form.Label className="text-nowrap text-truncate">Título do terceiro Membro da Banca</Form.Label>
+                                    <Form.Control defaultValue={thirdMemberTitle} type="text" placeholder="Título do 3° Membro"/>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    }
 
-                    <Col className="mt-2">
-                        <Form.Group onChange={event => { setPresentationRoom(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Sala de apresentação<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={presentationRoom} type="text" placeholder="Sala de apresentação"/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <div className="vstack d-grid justify-content-center">
-                        <Form.Text className="mt-3 text-center">Campos com (<span className="text-danger">*</span>) são obrigatórios</Form.Text>
-                        <Button variant="success" className="mt-5" type="submit">Aceitar</Button>  
-                </div>
-            </Form>
+                    <Row>
+                        <Col className="mt-2">
+                            <Form.Group onChange={event => { setPresentationDate(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Data da defesa<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={presentationDate} type="date"/>
+                            </Form.Group>
+                        </Col>
+
+                        <Col className="mt-2">
+                            <Form.Group onChange={event => { setPresentationHour(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Hora da defesa<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={presentationHour} type="time" placeholder="Hora da defesa"/>
+                            </Form.Group>
+                        </Col>
+
+                        <Col className="mt-2">
+                            <Form.Group onChange={event => { setPresentationRoom(event.target.value) }}>
+                                <Form.Label className="text-nowrap text-truncate">Sala de apresentação<span className="text-danger">*</span></Form.Label>
+                                <Form.Control defaultValue={presentationRoom} type="text" placeholder="Sala de apresentação"/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <div className="vstack d-grid justify-content-center">
+                            <Form.Text className="mt-3 text-center">Campos com (<span className="text-danger">*</span>) são obrigatórios</Form.Text>
+                            <Button variant="success" className="mt-5" type="submit">Aceitar</Button>  
+                            {errors && <p>errors</p>}
+                    </div>
+                </Form>
+            }
             </section>
         </Container>
     );
