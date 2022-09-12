@@ -1,4 +1,5 @@
 const express = require('express');
+const sentMail = require('../../config/mailconf');
 const Request = require('../../models/requestModel');
 const router = express.Router();
 
@@ -43,11 +44,20 @@ router.post("/api/new/request", async (req, res) => {
     })
 
     await newRequest.save().then(nreq => {
+        // const mail = process.env.TARGET_USER || `engcivil.cct@ufca.edu.br`;
+        const mail = process.env.TARGET_USER || `kelthonbalbino@gmail.com`;
+        sentMail({
+            from: `no-reply <autodocs.bot@gmail.com>`,
+                to: mail,
+                subject: "Novo Request de envio de documentos pelo Autodocs",
+                text: `Olá,\nFoi cadastrado uma solicitação de documentos\nEste e-mail foi gerado automaticamente, por favor não o responda\nAtt,\nEquipe Autodocs`,
+                html: `<p>Novo request cadastrado,\nFoi cadastrado uma solicitação de documentos\nEste e-mail foi gerado automaticamente, por favor não o responda\nAtt,\nEquipe Autodocs</p>`,
+        }).then().catch();
         res.status(200).json({
             request: nreq
         });
     }).catch(err => {
-        res.status(500).json({
+        res.json({
             errors: err.message
         })
     });

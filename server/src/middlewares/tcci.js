@@ -1,13 +1,10 @@
-const fs = require("fs");
 const sentMail = require("../config/mailconf");
-const { mail } = require("../utils/mail");
 const Coordinator = require("../models/coordinatorModel");
 const User = require("../models/userModel");
 const docFormAv = require("../utils/formAvaliacao");
 const docDecMember = require("../utils/declaracaoMember");
 const docDecOrientador = require("../utils/declaracaoOrientador");
 const date = require("../utils/date");
-const { consumers } = require("stream");
 
 module.exports = {
     tcci: async function (req, res, next) {
@@ -137,7 +134,6 @@ module.exports = {
         }
 
         if(errors.length > 0) {
-            docs.forEach(element => { if(fs.existsSync(element)) fs.unlinkSync(element) });
             return res.status(500).json({ errors: errors });
         } else {
 
@@ -151,8 +147,21 @@ module.exports = {
                     contentType: 'application/pdf'
                 });
             }
-            
-            mailOptions = mail(professorName, professorEmail, "Envio dos documentos", "Envio dos documentos", attachments);
+
+            const listDocs = () => {
+                let names = "";
+                filenames.forEach(filename => { names = names + filename + ",\n"  });
+                return names
+            }
+
+            mailOptions = {
+                from: `no-reply <autodocs.bot@gmail.com>`,
+                to: `${professorName} <${professorEmail}>`,
+                subject: "Envio de documentos pelo Autodocs",
+                text: `Olá ${professorName},\nSegue anexado a este e-mail os documentos solicitados:\n${listDocs()}\nEste e-mail foi gerado automaticamente, por favor não o responda\nAtt,\nEquipe Autodocs`,
+                html: `<p>Olá ${professorName},\nSegue anexado a este e-mail os documentos solicitados:\n${listDocs()}\nEste e-mail foi gerado automaticamente, por favor não o responda\nAtt,\nEquipe Autodocs</p>`,
+                attachment: attachments
+            }
 
             try {
                 sentMail(mailOptions).then(result => console.log("autodocs: Email sent", result)).catch(err => {
@@ -160,7 +169,6 @@ module.exports = {
                     console.log(`autodocs: ${err.message}`);
                 });
                 
-                docs.forEach(element => { if(fs.existsSync(element)) fs.unlinkSync(element) });
             } catch(err) {
                 errors.push(err.message);
                 console.log(`autodocs: ${err.message}`);

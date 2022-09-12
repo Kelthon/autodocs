@@ -1,24 +1,16 @@
-require("dotenv");
+require("dotenv/config");
 
 const mail = (name, email, subject, message, attachments) => {
-    options = {
-        from: `NOREPLY@Autodocs <${process.env.CLIENT_USER}>`,
+    const mail = process.env.CLIENT_USER || "autodocs.bot@gmail.com"
+    const options = {
+        from: `no-reply <${mail}>`,
         to: `${name} <${email}>`,
         subject: subject,
         text: message,
-        html: mailFormatHtml(message),
+        html: `<p>${message}</p>`,
         attachment: attachments
     }
     return options;
 }
 
-const mailFormatHtml = (title, message) => {
-    const mailTitle = title ? `<h1>${title}</h1>` : "";
-    const html = `${mailTitle}<p>${message}</p>`;
-    return html; 
-}
-
-module.exports = {
-    mail: mail,
-    mailFormatHtml: mailFormatHtml
-}
+module.exports = mail;
