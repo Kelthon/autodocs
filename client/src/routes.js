@@ -17,11 +17,13 @@ import NotfoundPage from "./pages/NotFoundPage";
 import UserEditFormPage from "./pages/UserEditFormPage";
 import UserDeleteFormPage from "./pages/UserDeleteFormPage";
 import CoordinatorPage from "./pages/CoordinatorPage";
+import LoadingComponent from "./components/Loading";
 
 function RouterList() {
     
     return (
         <Routes>
+            <Route path="/test" element={ <LoadingComponent/> }/>
             <Route path="/" element={ <HomePage/> }/>
             <Route path="login" element={ <LoginPage/> }/>
             <Route path="admin">

@@ -1,5 +1,4 @@
-const fs = require("fs");
-const transporter = require("../config/mailconf");
+const sentMail = require("../config/mailconf");
 const Coordinator = require("../models/coordinatorModel");
 const User = require("../models/userModel");
 const docFormAv = require("../utils/formAvaliacao");
@@ -52,11 +51,11 @@ module.exports = {
                 coordinatorSiape = user.siape;
             }).catch(err => {
                 errors.push("An Error occorred to try find user coordinator");
-                console.log(err);
+                console.log(`autodocs: ${err.message}`);
             });
         }).catch(err => {
             errors.push("An Error occorred to try find coordinator");
-            console.log(err);
+            console.log(`autodocs: ${err.message}`);
         });     
 
         professorId ? await User.findByPk(professorId).then(user => {
@@ -65,7 +64,7 @@ module.exports = {
             professorEmail = user.email;
         }).catch(err => {
             errors.push("An Error occorred to try find your user");
-            console.log(err);
+            console.log(`autodocs: ${err.message}`);
             return res.status(400).json({errors: errors});
         }) : errors.push("Login fail");
         
@@ -130,17 +129,17 @@ module.exports = {
                     jobTitle,
                 ));
         } catch(err) {
-            console.log(err);
+            console.log(`autodocs: ${err.message}`);
             errors.push("An Error occorred to try create files");
         }
 
         if(errors.length > 0) {
-            docs.forEach(element => { if(fs.existsSync(element)) fs.unlinkSync(element) });
             return res.status(500).json({ errors: errors });
         } else {
 
             const attachments = [];
-
+            let mailOptions;
+            
             for(let i = 0 ; i < docs.length; i++) {
                 attachments.push({
                     filename: filenames[i],
@@ -149,22 +148,33 @@ module.exports = {
                 });
             }
 
-            const mailOptions = {
-                from: "Autodocs <kelthon2018@hotmail.com>",
-                to: `Kelthon, <kelthonbalbino@gmail.com>`,
-                subject: "solicitação de documentos",
-                html: '<h1>Olá fulano!</h1><p>Segue anexado a este email os documentos gerados automaticamente pelo <a href="http://localhost:3000/">autodocs</a></p><strong>Não responda essa mesagem</strong>',
+            const listDocs = () => {
+                let names = "";
+                filenames.forEach(filename => { names = names + filename + ",\n"  });
+                return names
+            }
+
+            mailOptions = {
+                from: `no-reply <autodocs.bot@gmail.com>`,
+                to: `${professorName} <${professorEmail}>`,
+                subject: "Envio de documentos pelo Autodocs",
+                text: `Olá ${professorName},\nSegue anexado a este e-mail os documentos solicitados:\n${listDocs()}\nEste e-mail foi gerado automaticamente, por favor não o responda\nAtt,\nEquipe Autodocs`,
+                html: `<p>Olá ${professorName},\nSegue anexado a este e-mail os documentos solicitados:\n${listDocs()}\nEste e-mail foi gerado automaticamente, por favor não o responda\nAtt,\nEquipe Autodocs</p>`,
                 attachment: attachments
             }
 
             try {
-                transporter.sendMail(mailOptions, function (err, info) {
-                    docs.forEach(element => fs.unlinkSync(element));
-                    if(err) console.log(err);
+                sentMail(mailOptions).then(result => console.log("autodocs: Email sent", result)).catch(err => {
+                    errors.push(err.message);
+                    console.log(`autodocs: ${err.message}`);
                 });
+                
             } catch(err) {
-                console.log(err);
+                errors.push(err.message);
+                console.log(`autodocs: ${err.message}`);
             }
+
+            if(errors.length > 0) return res.json(errors);
                 
             next();
         }

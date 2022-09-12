@@ -26,7 +26,7 @@ function TcciFormPage() {
     const handleForm = async event => {
         event.preventDefault();
 
-        await api.post("/api/new/doc", {
+        await api.post("/api/new/request", {
             title: title,
             professorId: user.current.id,
             studentName: studentName,
@@ -142,9 +142,7 @@ function TcciFormPage() {
                 </Row>
                 <div className="vstack d-grid justify-content-center">
                         <Form.Text className="mt-3 text-center">Campos com (<span className="text-danger">*</span>) são obrigatórios</Form.Text>
-                        <Button className="mt-5" type="submit">Criar</Button>
-                        
-                        {/* <p>{ user }</p> */}
+                        <Button className="mt-5" type="submit">Criar</Button>  
                 </div>
             </Form>
             </section>
