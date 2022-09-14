@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Container, Badge, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import LoadingComponent from "../components/Loading";
 
 function AdminPage() {
-    const [loading, setLoading] = useState(true);
     return (
 
         <Container>
