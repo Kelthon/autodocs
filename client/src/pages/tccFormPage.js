@@ -80,14 +80,14 @@ function TcciFormPage() {
                 <Row>
                     <Col className="mt-2">
                         <Form.Group onChange={event => { setSecondMemberName(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Nome do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={secondMemberName} type="text" placeholder="Nome do 2° Membro da Banca"/>
+                            <Form.Label className="text-nowrap text-truncate">Nome do Coorientador<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={secondMemberName} type="text" placeholder="Nome do Coorientador"/>
                         </Form.Group> 
                     </Col>
                     <Col className="mt-2">
                         <Form.Group onChange={event => { setSecondMemberTitle(event.target.value) }}>
-                            <Form.Label className="text-nowrap text-truncate">Título do 2° Membro da Banca<span className="text-danger">*</span></Form.Label>
-                            <Form.Control defaultValue={secondMemberTitle} type="text" placeholder="Título do 2° Membro"/>
+                            <Form.Label className="text-nowrap text-truncate">Título do Coorientador<span className="text-danger">*</span></Form.Label>
+                            <Form.Control defaultValue={secondMemberTitle} type="text" placeholder="Título do Coorientador"/>
                         </Form.Group>  
                     </Col>
 

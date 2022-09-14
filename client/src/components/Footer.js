@@ -19,10 +19,10 @@ function Footer() {
                         </Row>
                         <Row>
                             <Col>
-                                text sample
+                                Autodocs é um gerador automatico de documentos
                             </Col>
                             <Col>
-                                email@example.com
+                                autodocs.bot@gmail.com
                             </Col>
                         </Row>
                     </Container>
@@ -30,7 +30,7 @@ function Footer() {
                 <div className="text-center p-4" style={{backgroundColor: "rgba(0,0,0,0.05)"}}>Autodocs &copy; 2022 Copyright</div>
             </footer>
         </>
-    )
+    );
 }
 
 export default Footer;

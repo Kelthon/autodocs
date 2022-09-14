@@ -16,7 +16,7 @@ function Menu() {
                 setAdm(res.data === true?true:false);
             });
         }
-    }, [authenticated]);
+    }, [user, authenticated]);
 
 
 
