@@ -5,7 +5,6 @@ import LoadingComponent from "../components/Loading";
 
 function AdminPage() {
     const [loading, setLoading] = useState(true);
-    api
     return (
 
         <Container>

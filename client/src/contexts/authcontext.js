@@ -21,7 +21,7 @@ export const AuthProvider = ({children}) => {
     const login = (id, token) => {
         user.current = {id: id, token: token}
         localStorage.setItem("user", JSON.stringify(user));
-        return navigate(-2);
+        return navigate("/");
     }
     
     const logout = () => {

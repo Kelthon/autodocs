@@ -11,7 +11,7 @@ function Menu() {
     const [adm, setAdm] = useState(false);
 
     useEffect(() => {
-        if(authenticated) {
+        if(authenticated && user.current) {
             api.get(`/api/typeuser/${user.current.id}`).then(res => {
                 setAdm(res.data === true?true:false);
             });
